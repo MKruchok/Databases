@@ -10,7 +10,7 @@
 *.html
 *.css
 *.rss
-*.xml
+
 *target
 
 # Flutter/Dart/Pub related

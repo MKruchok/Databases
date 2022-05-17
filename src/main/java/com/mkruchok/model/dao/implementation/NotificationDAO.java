@@ -19,10 +19,10 @@ public final class NotificationDAO implements AbstractDAO<Notification> {
     private static final String GET_ALL = "SELECT * FROM ajax_curr.notification";
     private static final String GET_BY_ID = "SELECT * FROM ajax_curr.notification WHERE id=?";
     private static final String CREATE = "INSERT ajax_curr.notification "
-            + "(`timestamp`,`type`,`device_id`,`hub_id`)" +
+            + "(`timestamp`,`notification_type`,`device_id`,`hub_id`)" +
             " VALUES (?, ?, ?, ?)";
     private static final String UPDATE = "UPDATE ajax_curr.notification"
-            + " SET timestamp=?, type=?, device_id=?, hub_id=? WHERE id=?";
+            + " SET timestamp=?, notification_type=?, device_id=?, hub_id=? WHERE id=?";
     private static final String DELETE = "DELETE FROM ajax_curr.notification WHERE id=?";
     static final Logger LOGGER = LoggerFactory.getLogger(NotificationDAO.class);
 
@@ -36,7 +36,7 @@ public final class NotificationDAO implements AbstractDAO<Notification> {
                 Notification notification = new Notification(
                         resultSet.getInt("id"),
                         resultSet.getTimestamp("timestamp"),
-                        resultSet.getString("type"),
+                        resultSet.getString("notification_type"),
                         resultSet.getInt("device_id"),
                         resultSet.getInt("hub_id")
                 );
@@ -60,7 +60,7 @@ public final class NotificationDAO implements AbstractDAO<Notification> {
                 notification = new Notification(
                         resultSet.getInt("id"),
                         resultSet.getTimestamp("timestamp"),
-                        resultSet.getString("type"),
+                        resultSet.getString("notification_type"),
                         resultSet.getInt("device_id"),
                         resultSet.getInt("hub_id")
                 );
@@ -76,7 +76,7 @@ public final class NotificationDAO implements AbstractDAO<Notification> {
     public void create(Notification notification) throws SQLException {
         try (PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(CREATE)) {
             statement.setTimestamp(1, notification.getTimestamp());
-            statement.setString(2, notification.getType());
+            statement.setString(2, notification.getNotificationType());
             statement.setInt(3, notification.getDeviceId());
             statement.setInt(4, notification.getHubId());
             statement.executeUpdate();
@@ -91,7 +91,7 @@ public final class NotificationDAO implements AbstractDAO<Notification> {
     public void update(Integer id, Notification notification) throws SQLException {
         try (PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(UPDATE)) {
             statement.setTimestamp(1, notification.getTimestamp());
-            statement.setString(2, notification.getType());
+            statement.setString(2, notification.getNotificationType());
             statement.setInt(3, notification.getDeviceId());
             statement.setInt(4, notification.getHubId());
             statement.setInt(5, notification.getId());

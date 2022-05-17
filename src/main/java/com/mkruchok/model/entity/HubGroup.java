@@ -11,22 +11,21 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public final class Rex {
+public final class HubGroup {
     private Integer id;
-    private String rexName;
-    private String rexRange;
+    private String groupName;
+    private String groupDescription;
     private Integer hubId;
 
-
-    public Rex(String rexName, String rexRange, Integer hubId) {
-        this.rexName = rexName;
-        this.rexRange = rexRange;
+    public HubGroup(String groupName, String groupDescription, Integer hubId) {
+        this.groupName = groupName;
+        this.groupDescription = groupDescription;
         this.hubId = hubId;
     }
 
     @Override
     public String toString() {
-        return "\n\nRex: id: " + id + ", name: " + rexName + ", range: " + rexRange + ", hub_id: " +
+        return "\n\nGroup: id: " + id + ", name: " + groupName + ", description: " + groupDescription + ", hub_id: " +
                 hubId;
     }
 }

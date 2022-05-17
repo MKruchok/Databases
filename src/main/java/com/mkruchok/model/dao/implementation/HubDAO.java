@@ -19,10 +19,10 @@ public final class HubDAO implements AbstractDAO<Hub> {
     private static final String GET_ALL = "SELECT * FROM ajax_curr.hub";
     private static final String GET_BY_ID = "SELECT * FROM ajax_curr.hub WHERE id=?";
     private static final String CREATE = "INSERT ajax_curr.hub "
-            + "(`model`,`status`,`service_life_end_time`,`warranty_end_time`,`users_max`,`rooms_max`," +
+            + "(`model`,`hub_status`,`service_life_end_time`,`warranty_end_time`,`users_max`,`rooms_max`," +
             "`devices_max`,`sirens_max`,`on_battery`) VALUES (?, ?, ?, ?,?, ?, ?, ?, ?)";
     private static final String UPDATE = "UPDATE ajax_curr.hub"
-            + " SET model=?, status=?, service_life_end_time=?, warranty_end_time=?, users_max=?, rooms_max=?, " +
+            + " SET model=?, hub_status=?, service_life_end_time=?, warranty_end_time=?, users_max=?, rooms_max=?, " +
             "devices_max=?, sirens_max=?, on_battery=? WHERE id=?";
     private static final String DELETE = "DELETE FROM ajax_curr.hub WHERE id=?";
     static final Logger LOGGER = LoggerFactory.getLogger(HubDAO.class);
@@ -37,7 +37,7 @@ public final class HubDAO implements AbstractDAO<Hub> {
                 Hub hub = new Hub(
                         resultSet.getInt("id"),
                         resultSet.getString("model"),
-                        resultSet.getString("status"),
+                        resultSet.getString("hub_status"),
                         resultSet.getTimestamp("service_life_end_time"),
                         resultSet.getTimestamp("warranty_end_time"),
                         resultSet.getInt("users_max"),
@@ -67,7 +67,7 @@ public final class HubDAO implements AbstractDAO<Hub> {
                 hub = new Hub(
                         resultSet.getInt("id"),
                         resultSet.getString("model"),
-                        resultSet.getString("status"),
+                        resultSet.getString("hub_status"),
                         resultSet.getTimestamp("service_life_end_time"),
                         resultSet.getTimestamp("warranty_end_time"),
                         resultSet.getInt("users_max"),
@@ -88,7 +88,7 @@ public final class HubDAO implements AbstractDAO<Hub> {
     public void create(Hub hub) throws SQLException {
         try (PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(CREATE)) {
             statement.setString(1, hub.getModel());
-            statement.setString(2, hub.getStatus());
+            statement.setString(2, hub.getHubStatus());
             statement.setTimestamp(3, hub.getServiceLifeEndTime());
             statement.setTimestamp(4, hub.getWarrantyEndTime());
             statement.setInt(6, hub.getRoomsMax());
@@ -108,7 +108,7 @@ public final class HubDAO implements AbstractDAO<Hub> {
     public void update(Integer id, Hub hub) throws SQLException {
         try (PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(UPDATE)) {
             statement.setString(1, hub.getModel());
-            statement.setString(2, hub.getStatus());
+            statement.setString(2, hub.getHubStatus());
             statement.setTimestamp(3, hub.getServiceLifeEndTime());
             statement.setTimestamp(4, hub.getWarrantyEndTime());
             statement.setInt(5, hub.getUsersMax());

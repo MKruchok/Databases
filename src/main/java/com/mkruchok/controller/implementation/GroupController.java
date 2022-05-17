@@ -1,33 +1,33 @@
 package com.mkruchok.controller.implementation;
 
 import com.mkruchok.controller.AbstractController;
-import com.mkruchok.model.entity.Group;
+import com.mkruchok.model.entity.HubGroup;
 import com.mkruchok.service.implementation.GroupService;
 
 import java.sql.SQLException;
 import java.util.List;
 
-public final class GroupController implements AbstractController<Group> {
+public final class GroupController implements AbstractController<HubGroup> {
 
     private final GroupService service = new GroupService();
 
     @Override
-    public List<Group> findAll() throws SQLException {
+    public List<HubGroup> findAll() throws SQLException {
         return service.findAll();
     }
 
     @Override
-    public Group findById(Integer id) throws SQLException {
+    public HubGroup findById(Integer id) throws SQLException {
         return service.findById(id);
     }
 
     @Override
-    public void create(Group entity) throws SQLException {
+    public void create(HubGroup entity) throws SQLException {
         service.create(entity);
     }
 
     @Override
-    public void update(Integer id, Group entity) throws SQLException {
+    public void update(Integer id, HubGroup entity) throws SQLException {
         service.update(id, entity);
     }
 

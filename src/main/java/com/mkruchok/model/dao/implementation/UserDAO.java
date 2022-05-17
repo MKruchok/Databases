@@ -19,9 +19,9 @@ public final class UserDAO implements AbstractDAO<User> {
     private static final String GET_ALL = "SELECT * FROM ajax_curr.user";
     private static final String GET_BY_ID = "SELECT * FROM ajax_curr.user WHERE id=?";
     private static final String CREATE = "INSERT ajax_curr.user "
-            + "(`email`, `password`, `date_created`, `name`, `group_id`) VALUES (?, ?, ?, ?, ?)";
+            + "(`email`, `user_password`, `date_created`, `user_name`, `group_id`) VALUES (?, ?, ?, ?, ?)";
     private static final String UPDATE = "UPDATE ajax_curr.user"
-            + " SET email=?, password=?, date_created=?, name=?, group_id=? WHERE id=?";
+            + " SET email=?, user_password=?, date_created=?, user_name=?, group_id=? WHERE id=?";
     private static final String DELETE = "DELETE FROM ajax_curr.user WHERE id=?";
     static final Logger LOGGER = LoggerFactory.getLogger(UserDAO.class);
 
@@ -35,9 +35,9 @@ public final class UserDAO implements AbstractDAO<User> {
                 User user = new User(
                         resultSet.getInt("id"),
                         resultSet.getString("email"),
-                        resultSet.getString("password"),
+                        resultSet.getString("user_password"),
                         resultSet.getTimestamp("date_created"),
-                        resultSet.getString("name"),
+                        resultSet.getString("user_name"),
                         resultSet.getString("group_id")
                 );
                 users.add(user);
@@ -60,9 +60,9 @@ public final class UserDAO implements AbstractDAO<User> {
                 user = new User(
                         resultSet.getInt("id"),
                         resultSet.getString("email"),
-                        resultSet.getString("password"),
+                        resultSet.getString("user_password"),
                         resultSet.getTimestamp("date_created"),
-                        resultSet.getString("name"),
+                        resultSet.getString("user_name"),
                         resultSet.getString("group_id")
                 );
             }
@@ -77,9 +77,9 @@ public final class UserDAO implements AbstractDAO<User> {
     public void create(User user) throws SQLException {
         try (PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(CREATE)) {
             statement.setString(1, user.getEmail());
-            statement.setString(2, user.getPassword());
+            statement.setString(2, user.getUserPassword());
             statement.setTimestamp(3, user.getDateCreated());
-            statement.setString(4, user.getName());
+            statement.setString(4, user.getUserName());
             statement.setString(5, user.getGroupId());
             statement.executeUpdate();
             LOGGER.info(String.valueOf(statement));
@@ -93,9 +93,9 @@ public final class UserDAO implements AbstractDAO<User> {
     public void update(Integer id, User user) throws SQLException {
         try (PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(UPDATE)) {
             statement.setString(1, user.getEmail());
-            statement.setString(2, user.getPassword());
+            statement.setString(2, user.getUserPassword());
             statement.setTimestamp(3, user.getDateCreated());
-            statement.setString(4, user.getName());
+            statement.setString(4, user.getUserName());
             statement.setString(5, user.getGroupId());
             statement.setInt(6, user.getId());
             statement.executeUpdate();

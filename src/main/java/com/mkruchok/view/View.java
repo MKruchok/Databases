@@ -100,7 +100,7 @@ public final class View {
         LOGGER.debug("Enter email: ");
         String email = SCANNER.next();
         LOGGER.debug("Enter password: ");
-        String password = SCANNER.next();
+        String user_password = SCANNER.next();
         LOGGER.debug("Enter name: ");
         String name = SCANNER.next();
         Timestamp dateCreated = new Timestamp(System.currentTimeMillis());
@@ -109,7 +109,7 @@ public final class View {
             LOGGER.debug("Enter group id: ");
             groupId = SCANNER.next();
         }
-        return new User(email, password, dateCreated, name, groupId);
+        return new User(email, user_password, dateCreated, name, groupId);
     }
 
     private void createUser() throws SQLException {
@@ -260,7 +260,7 @@ public final class View {
     }
 
     private Notification getNotificationInputs() {
-        LOGGER.debug("Enter timestamp: ");
+        LOGGER.debug("Enter timestamp: ");SCANNER.nextLine();
         Timestamp timestamp = Timestamp.valueOf(SCANNER.nextLine());
         LOGGER.debug("Enter type: ");
         String type = SCANNER.next();
@@ -306,19 +306,19 @@ public final class View {
         LOGGER.debug(groupController.findById(id).toString());
     }
 
-    private Group getGroupInputs() {
+    private HubGroup getGroupInputs() {
         LOGGER.debug("\nEnter name: ");
         String name = SCANNER.next();
         LOGGER.debug("\nEnter description: ");
         String description = SCANNER.next();
         LOGGER.debug("Enter hub_id: ");
         Integer hubId = SCANNER.nextInt();
-        return new Group(name, description, hubId);
+        return new HubGroup(name, description, hubId);
     }
 
     private void createGroup() throws SQLException {
         
-        Group group = getGroupInputs();
+        HubGroup group = getGroupInputs();
         groupController.create(group);
         LOGGER.debug("Group was added to the table.\nEnter numbers: ");
     }
@@ -326,7 +326,7 @@ public final class View {
     private void updateGroup() throws SQLException {
         LOGGER.debug("\nEnter id to update:");
         Integer id = SCANNER.nextInt();
-        Group group = getGroupInputs();
+        HubGroup group = getGroupInputs();
         group.setId(id);
         groupController.update(group.getId(), group);
         LOGGER.debug("Updated group, id = " + id);

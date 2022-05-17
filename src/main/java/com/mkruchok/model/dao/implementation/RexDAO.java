@@ -19,11 +19,11 @@ public final class RexDAO implements AbstractDAO<Rex> {
     private static final String GET_ALL = "SELECT * FROM ajax_curr.rex";
     private static final String GET_BY_ID = "SELECT * FROM ajax_curr.rex WHERE id=?";
     private static final String CREATE = "INSERT ajax_curr.rex "
-            + "(`name`,`range`,`hub_id`)" +
+            + "(`rex_name`,`rex_range`,`hub_id`)" +
             " VALUES (?, ?, ?)";
     private static final String UPDATE = "UPDATE ajax_curr.rex"
-            + " SET name=?, range=?, hub_id=? WHERE id=?";
-    private static final String DELETE = "DELETE FROM ajax_curr.group WHERE id=?";
+            + " SET rex_name=?, rex_range=?, hub_id=? WHERE id=?";
+    private static final String DELETE = "DELETE FROM ajax_curr.rex WHERE id=?";
     static final Logger LOGGER = LoggerFactory.getLogger(RexDAO.class);
 
     @Override
@@ -35,8 +35,8 @@ public final class RexDAO implements AbstractDAO<Rex> {
             while (resultSet.next()) {
                 Rex rex = new Rex(
                         resultSet.getInt("id"),
-                        resultSet.getString("name"),
-                        resultSet.getString("range"),
+                        resultSet.getString("rex_name"),
+                        resultSet.getString("rex_range"),
                         resultSet.getInt("hub_id")
                 );
                 rexes.add(rex);
@@ -58,8 +58,8 @@ public final class RexDAO implements AbstractDAO<Rex> {
             while (resultSet.next()) {
                 rex = new Rex(
                         resultSet.getInt("id"),
-                        resultSet.getString("name"),
-                        resultSet.getString("range"),
+                        resultSet.getString("rex_name"),
+                        resultSet.getString("rex_range"),
                         resultSet.getInt("hub_id")
                 );
             }
@@ -73,8 +73,8 @@ public final class RexDAO implements AbstractDAO<Rex> {
     @Override
     public void create(Rex rex) throws SQLException {
         try (PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(CREATE)) {
-            statement.setString(1, rex.getName());
-            statement.setString(2, rex.getRange());
+            statement.setString(1, rex.getRexName());
+            statement.setString(2, rex.getRexRange());
             statement.setInt(3, rex.getHubId());
             statement.executeUpdate();
             LOGGER.info(String.valueOf(statement));
@@ -87,8 +87,8 @@ public final class RexDAO implements AbstractDAO<Rex> {
     @Override
     public void update(Integer id, Rex rex) throws SQLException {
         try (PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(UPDATE)) {
-            statement.setString(1, rex.getName());
-            statement.setString(2, rex.getRange());
+            statement.setString(1, rex.getRexName());
+            statement.setString(2, rex.getRexRange());
             statement.setInt(3, rex.getHubId());
             statement.setInt(4, rex.getId());
             statement.executeUpdate();

@@ -1,7 +1,7 @@
 package com.mkruchok.model.dao.implementation;
 
 import com.mkruchok.model.dao.AbstractDAO;
-import com.mkruchok.model.entity.Group;
+import com.mkruchok.model.entity.HubGroup;
 import com.mkruchok.persistant.ConnectionManager;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.slf4j.Logger;
@@ -14,29 +14,29 @@ import java.util.ArrayList;
 import java.util.List;
 @SuppressFBWarnings
 @SuppressWarnings("magicnumber")
-public final class GroupDAO implements AbstractDAO<Group> {
+public final class GroupDAO implements AbstractDAO<HubGroup> {
 
-    private static final String GET_ALL = "SELECT * FROM ajax_curr.group";
-    private static final String GET_BY_ID = "SELECT * FROM ajax_curr.group WHERE id=?";
-    private static final String CREATE = "INSERT ajax_curr.group "
-            + "(`name`,`description`,`hub_id`)" +
+    private static final String GET_ALL = "SELECT * FROM ajax_curr.hub_group";
+    private static final String GET_BY_ID = "SELECT * FROM ajax_curr.hub_group WHERE id=?";
+    private static final String CREATE = "INSERT ajax_curr.hub_group "
+            + "(`group_name`,`group_description`,`hub_id`)" +
             " VALUES (?, ?, ?)";
-    private static final String UPDATE = "UPDATE ajax_curr.group"
-            + " SET name=?, description=?, hub_id=? WHERE id=?";
-    private static final String DELETE = "DELETE FROM ajax_curr.group WHERE id=?";
+    private static final String UPDATE = "UPDATE ajax_curr.hub_group"
+            + " SET group_name=?, group_description=?, hub_id=? WHERE id=?";
+    private static final String DELETE = "DELETE FROM ajax_curr.hub_group WHERE id=?";
     static final Logger LOGGER = LoggerFactory.getLogger(GroupDAO.class);
 
     @Override
-    public List<Group> findAll() throws SQLException {
-        List<Group> groups = new ArrayList<>();
+    public List<HubGroup> findAll() throws SQLException {
+        List<HubGroup> groups = new ArrayList<>();
         try (PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(GET_ALL)) {
             LOGGER.info(String.valueOf(statement));
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                Group group = new Group(
+                HubGroup group = new HubGroup(
                         resultSet.getInt("id"),
-                        resultSet.getString("name"),
-                        resultSet.getString("description"),
+                        resultSet.getString("group_name"),
+                        resultSet.getString("group_description"),
                         resultSet.getInt("hub_id")
                 );
                 groups.add(group);
@@ -49,14 +49,14 @@ public final class GroupDAO implements AbstractDAO<Group> {
     }
 
     @Override
-    public Group findById(Integer id) throws SQLException {
-        Group group = null;
+    public HubGroup findById(Integer id) throws SQLException {
+        HubGroup group = null;
         try (PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(GET_BY_ID)) {
             statement.setInt(1, id);
             LOGGER.info(String.valueOf(statement));
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                group = new Group(
+                group = new HubGroup(
                         resultSet.getInt("id"),
                         resultSet.getString("name"),
                         resultSet.getString("description"),
@@ -71,10 +71,10 @@ public final class GroupDAO implements AbstractDAO<Group> {
     }
 
     @Override
-    public void create(Group group) throws SQLException {
+    public void create(HubGroup group) throws SQLException {
         try (PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(CREATE)) {
-            statement.setString(1, group.getName());
-            statement.setString(2, group.getDescription());
+            statement.setString(1, group.getGroupName());
+            statement.setString(2, group.getGroupDescription());
             statement.setInt(3, group.getHubId());
             statement.executeUpdate();
             LOGGER.info(String.valueOf(statement));
@@ -85,10 +85,10 @@ public final class GroupDAO implements AbstractDAO<Group> {
     }
 
     @Override
-    public void update(Integer id, Group group) throws SQLException {
+    public void update(Integer id, HubGroup group) throws SQLException {
         try (PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(UPDATE)) {
-            statement.setString(1, group.getName());
-            statement.setString(2, group.getDescription());
+            statement.setString(1, group.getGroupName());
+            statement.setString(2, group.getGroupDescription());
             statement.setInt(3, group.getHubId());
             statement.setInt(4, group.getId());
             statement.executeUpdate();

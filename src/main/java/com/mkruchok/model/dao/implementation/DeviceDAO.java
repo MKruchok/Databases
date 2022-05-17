@@ -21,10 +21,10 @@ public final class DeviceDAO implements AbstractDAO<Device> {
     private static final String GET_ALL = "SELECT * FROM ajax_curr.device";
     private static final String GET_BY_ID = "SELECT * FROM ajax_curr.device WHERE id=?";
     private static final String CREATE = "INSERT ajax_curr.device "
-            + "(`model`,`status`,`service_life_end_time`,`warranty_end_time`,`on_battery`,`hub_id`)" +
+            + "(`model`,`device_status`,`service_life_end_time`,`warranty_end_time`,`on_battery`,`hub_id`)" +
             " VALUES (?, ?, ?, ?, ?, ?)";
     private static final String UPDATE = "UPDATE ajax_curr.device"
-            + " SET model=?, status=?, service_life_end_time=?, warranty_end_time=?, on_battery=?, hub_id=? WHERE id=?";
+            + " SET model=?, device_status=?, service_life_end_time=?, warranty_end_time=?, on_battery=?, hub_id=? WHERE id=?";
     private static final String DELETE = "DELETE FROM ajax_curr.device WHERE id=?";
     static final Logger LOGGER = LoggerFactory.getLogger(DeviceDAO.class);
 
@@ -39,7 +39,7 @@ public final class DeviceDAO implements AbstractDAO<Device> {
                 Device device = new Device(
                         resultSet.getInt("id"),
                         resultSet.getString("model"),
-                        resultSet.getString("status"),
+                        resultSet.getString("device_status"),
                         resultSet.getTimestamp("service_life_end_time"),
                         resultSet.getTimestamp("warranty_end_time"),
                         resultSet.getInt("on_battery"),
@@ -65,7 +65,7 @@ public final class DeviceDAO implements AbstractDAO<Device> {
                 device = new Device(
                         resultSet.getInt("id"),
                         resultSet.getString("model"),
-                        resultSet.getString("status"),
+                        resultSet.getString("device_status"),
                         resultSet.getTimestamp("service_life_end_time"),
                         resultSet.getTimestamp("warranty_end_time"),
                         resultSet.getInt("on_battery"),
@@ -83,7 +83,7 @@ public final class DeviceDAO implements AbstractDAO<Device> {
     public void create(Device device) throws SQLException {
         try (PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(CREATE)) {
             statement.setString(1, device.getModel());
-            statement.setString(2, device.getStatus());
+            statement.setString(2, device.getDeviceStatus());
             statement.setTimestamp(3, device.getServiceLifeEndTime());
             statement.setTimestamp(4, device.getWarrantyEndTime());
             statement.setInt(5, device.getOnBattery());
@@ -99,7 +99,7 @@ public final class DeviceDAO implements AbstractDAO<Device> {
     @Override
     public void update(Integer id, Device device) throws SQLException {
         try (PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(UPDATE)) {
-            statement.setString(2, device.getStatus());
+            statement.setString(2, device.getDeviceStatus());
             statement.setString(1, device.getModel());
             statement.setTimestamp(3, device.getServiceLifeEndTime());
             statement.setTimestamp(4, device.getWarrantyEndTime());

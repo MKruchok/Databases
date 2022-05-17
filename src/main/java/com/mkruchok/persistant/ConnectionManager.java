@@ -9,11 +9,11 @@ import java.sql.DriverManager;
 
 @SuppressFBWarnings
 public final class ConnectionManager {
-    static final Logger LOGGER = LoggerFactory.getLogger(ConnectionManager.class);
     private static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     private static final String DATABASE_URL = "jdbc:mysql://localhost:3306/ajax_curr?useUnicode=true&serverTimezone=UTC";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "admin";
+    static final Logger LOGGER = LoggerFactory.getLogger(ConnectionManager.class);
     private static Connection databaseConnection;
 
     public ConnectionManager() {

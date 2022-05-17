@@ -1,53 +1,39 @@
 package com.mkruchok.model.entity;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
 import lombok.Getter;
 import lombok.Setter;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
 
-
-@Table(name = "notification")
 @SuppressFBWarnings
-@AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode(of = "id")
 @Getter
 @Setter
-@ToString
-@Entity
-public class Notification {
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public final class Notification {
     private Integer id;
-    @CreationTimestamp
-    @Column(name = "timestamp")
     private Timestamp timestamp;
-    @Column(name = "notification_type", length = 45)
     private String type;
+    private Integer deviceId;
+    private Integer hubId;
 
+    public Notification(Integer id, Timestamp timestamp, String type, Integer deviceId, Integer hubId) {
+        this.id = id;
+        this.timestamp = timestamp;
+        this.type = type;
+        this.deviceId = deviceId;
+        this.hubId = hubId;
+    }
 
-    @ManyToOne
-    @JoinColumn(name = "device_id", referencedColumnName = "id")
-    private Device deviceId;
+    public Notification(Timestamp timestamp, String type, Integer deviceId, Integer hubId) {
+        this.timestamp = timestamp;
+        this.type = type;
+        this.deviceId = deviceId;
+        this.hubId = hubId;
+    }
 
-    @ManyToOne
-    @JoinColumn(name = "hub_id", referencedColumnName = "id")
-    private Hub hubNotificationId;
-
-
+    @Override
+    public String toString() {
+        return "\n\nNotification: id: " + id + ", timestamp: " + timestamp + ", type: " + type + ", device_id: " +
+                deviceId + ", hub_id: " + hubId;
+    }
 }

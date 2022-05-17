@@ -1,38 +1,39 @@
-package com.mkruchok.controller.implementation;
+package com.mkruchok.service.implementation;
 
-import com.mkruchok.controller.AbstractController;
+import com.mkruchok.model.dao.implementation.HubDAO;
 import com.mkruchok.model.entity.Hub;
-import com.mkruchok.service.implementation.HubService;
+import com.mkruchok.service.AbstractService;
 
 import java.sql.SQLException;
 import java.util.List;
 
-public final class HubController implements AbstractController<Hub> {
+public final class HubService implements AbstractService<Hub> {
 
-    private final HubService service = new HubService();
+    private final HubDAO dao = new HubDAO();
 
     @Override
     public List<Hub> findAll() throws SQLException {
-        return service.findAll();
+        return dao.findAll();
     }
 
     @Override
     public Hub findById(Integer id) throws SQLException {
-        return service.findById(id);
+        return dao.findById(id);
     }
 
     @Override
     public void create(Hub entity) throws SQLException {
-        service.create(entity);
+        dao.create(entity);
     }
 
     @Override
     public void update(Integer id, Hub entity) throws SQLException {
-        service.update(id, entity);
+        dao.update(id, entity);
     }
 
     @Override
     public void delete(Integer id) throws SQLException {
-        service.delete(id);
+        dao.delete(id);
     }
+
 }

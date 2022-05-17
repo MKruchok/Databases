@@ -7,22 +7,16 @@ public interface AbstractController<E> {
 
     List<E> findAll() throws SQLException;
 
-    default E findById(Integer id) throws SQLException {
+    default E findById(Integer id) {
         return null;
     }
 
-    default void create(E entity) throws SQLException {
+    default void create(E entity) {
     }
 
-    default void update(Integer id, E entity) throws SQLException {
+    default void update(Integer id, E entity) {
     }
 
-    default void delete(Integer id) throws SQLException {
-    }
-
-    default void update(String name, E entity) throws SQLException {
-    }
-
-    default void delete(String name) throws SQLException {
+    default void delete(Integer id) {
     }
 }

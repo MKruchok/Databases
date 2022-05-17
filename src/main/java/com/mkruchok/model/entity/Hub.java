@@ -1,33 +1,101 @@
 package com.mkruchok.model.entity;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OrderColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
+import javax.persistence.JoinTable;
 import java.sql.Timestamp;
+import java.util.Collection;
 
+@Table(name = "hub")
 @SuppressFBWarnings
 @Getter
+@ToString
+@EqualsAndHashCode(of = "id")
+@AllArgsConstructor
+@NoArgsConstructor
 @Setter
-public final class Hub {
+@Entity
+public class Hub {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer id;
+    @Column(name = "model", length = 45)
     private String model;
+    @Column(name = "hub_status", length = 45)
     private String status;
+    @CreationTimestamp
+    @Column(name = "service_life_end_time", length = 45)
     private Timestamp serviceLifeEndTime;
+    @CreationTimestamp
+    @Column(name = "warranty_end_time", length = 45)
     private Timestamp warrantyEndTime;
+    @Column(name = "users_max", length = 45)
     private Integer usersMax;
+    @Column(name = "rooms_max", length = 45)
     private Integer roomsMax;
+    @Column(name = "devices_max", length = 45)
     private Integer devicesMax;
+    @Column(name = "sirens_max", length = 45)
     private Integer sirensMax;
+    @Column(name = "on_battery", length = 1)
     private Integer onBattery;
+    @OrderColumn
+    @OneToMany(mappedBy = "hubGroupId", fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private Collection<Group> groups;
+    @OrderColumn
+    @OneToMany(mappedBy = "hubRexId", fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private Collection<Rex> rexes;
+    @OrderColumn
+    @OneToMany(mappedBy = "hubNotificationId", fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private Collection<Notification> notifications;
 
-    public Hub(Integer id, String model, String status, Timestamp serviceLifeEndTime, Timestamp warrantyEndTime,
+
+    @OrderColumn
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy = "hubId")
+    @ToString.Exclude
+    private Collection<Device> devices;
+
+
+    @OrderColumn
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @ManyToMany
+    @JoinTable(name = "user_has_hub",
+            joinColumns = @JoinColumn(name = "hub_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @ToString.Exclude
+    Collection<Hub> hubHasUsers;
+
+    public Hub(String model, String status, Timestamp serviceLifeEndTime, Timestamp warrantyEndTime,
                Integer usersMax, Integer roomsMax, Integer devicesMax, Integer sirensMax, Integer onBattery) {
-        this.id = id;
         this.model = model;
         this.status = status;
-        this.serviceLifeEndTime = new Timestamp(serviceLifeEndTime.getTime());
-        this.warrantyEndTime = new Timestamp(warrantyEndTime.getTime());
+        this.serviceLifeEndTime = serviceLifeEndTime;
+        this.warrantyEndTime = warrantyEndTime;
         this.usersMax = usersMax;
         this.roomsMax = roomsMax;
         this.devicesMax = devicesMax;
@@ -35,20 +103,4 @@ public final class Hub {
         this.onBattery = onBattery;
     }
 
-    public Hub(String model, String status, Timestamp serviceLifeEndTime, Timestamp warrantyEndTime, Integer usersMax, Integer roomsMax, Integer devicesMax, Integer sirensMax, Integer onBattery) {
-        this.model = model;
-        this.status = status;
-        this.serviceLifeEndTime = new Timestamp(serviceLifeEndTime.getTime());
-        this.warrantyEndTime = new Timestamp(warrantyEndTime.getTime());
-        this.usersMax = usersMax;
-        this.roomsMax = roomsMax;
-        this.devicesMax = devicesMax;
-        this.sirensMax = sirensMax;
-        this.onBattery = onBattery;
-    }
-
-    @Override
-    public String toString() {
-        return "\n\nHub: id: " + id + ", model: " + model + ", status: " + status + ", service_life_end_time: " + serviceLifeEndTime + ", warranty_end_time: " + warrantyEndTime + ", users_max: " + usersMax + ", rooms_max: " + roomsMax + ", devices_max: " + devicesMax + ", sirens_max: " + sirensMax + ", on_battery: " + onBattery + "]";
-    }
 }

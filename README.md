@@ -1,3 +1,3 @@
-# Lab 4
+# Lab 5
 
-JDBC Maven 
+JDBC Maven Hibernate JPA

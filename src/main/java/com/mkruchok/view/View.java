@@ -5,17 +5,14 @@ import com.mkruchok.model.entity.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 
 public final class View {
+    static final Logger LOGGER = LoggerFactory.getLogger(View.class);
     private static final Scanner SCANNER = new Scanner(System.in, "UTF-8");
     private final Map<String, Printable> menu = new LinkedHashMap<>();
-
     private final HubController hubController = new HubController();
     private final DeviceController deviceController = new DeviceController();
     private final NotificationController notificationController = new NotificationController();
@@ -23,7 +20,7 @@ public final class View {
     private final PermissionController permissionController = new PermissionController();
     private final UserController userController = new UserController();
     private final RexController rexController = new RexController();
-    static final Logger LOGGER = LoggerFactory.getLogger(View.class);
+    Menu showMenu = new Menu();
 
 
     public View() {
@@ -72,31 +69,30 @@ public final class View {
 
     public void show() {
         String input;
-        Menu showMenu = new Menu();
         showMenu.displayMenu();
-        LOGGER.debug("\nEnter numbers:\n");
         do {
             try {
                 input = SCANNER.next();
                 menu.get(input).print();
             } catch (Exception e) {
-                LOGGER.debug("\nSomething is not right...\n");
+                LOGGER.debug(String.valueOf(e));
             }
         } while (SCANNER.hasNext());
     }
 
-    private void getAllUsers() throws SQLException {
-
-        LOGGER.debug(userController.findAll().toString());
+    private void getAllUsers() {
+        userController.findAll();
+        showMenu.displayMenu();
     }
 
-    private void getUserById() throws SQLException {
+    private void getUserById() {
         LOGGER.debug("\nEnter iD: ");
         Integer id = SCANNER.nextInt();
         LOGGER.debug(userController.findById(id).toString());
+        showMenu.displayMenu();
     }
 
-    private User getUserInputs(Integer create) {
+    private User getUserInputs(Integer create) throws NullPointerException {
         LOGGER.debug("Enter email: ");
         String email = SCANNER.next();
         LOGGER.debug("Enter password: ");
@@ -104,47 +100,58 @@ public final class View {
         LOGGER.debug("Enter name: ");
         String name = SCANNER.next();
         Timestamp dateCreated = new Timestamp(System.currentTimeMillis());
-        String groupId = null;
+        Group groupEntity = null;
+        Collection<Hub> userHubs = new ArrayList<>();
+        Collection<Permission> userPermissions = new ArrayList<>();
         if (create == 0) {
             LOGGER.debug("Enter group id: ");
-            groupId = SCANNER.next();
+            Integer groupId = SCANNER.nextInt();
+            LOGGER.debug("Enter hub id that user has: ");
+            Integer hubId = SCANNER.nextInt();
+            userHubs.add(hubController.findById(hubId));
+            LOGGER.debug("Enter permission id that user has: ");
+            Integer permissionId = SCANNER.nextInt();
+            userPermissions.add(permissionController.findById(permissionId));
+            groupEntity = groupController.findById(groupId);
         }
-        return new User(email, password, dateCreated, name, groupId);
+        return new User(null, email, password, dateCreated, name, groupEntity, userHubs, userPermissions);
     }
 
-    private void createUser() throws SQLException {
-        
+    private void createUser() {
         User user = getUserInputs(1);
         userController.create(user);
-        LOGGER.debug("User was added to the table.\nEnter numbers: ");
+        LOGGER.debug("\nUser was added to the table.\n");
+        showMenu.displayMenu();
     }
 
-    private void updateUser() throws SQLException {
-        LOGGER.debug("\nEnter id to updаte: ");
+    private void updateUser() {
+        LOGGER.debug("\nEnter id to update: ");
         Integer id = SCANNER.nextInt();
         User user = getUserInputs(0);
         user.setId(id);
         userController.update(user.getId(), user);
         LOGGER.debug("Updated user, id = " + id);
+        showMenu.displayMenu();
     }
 
-    private void deleteUser() throws SQLException {
+    private void deleteUser() {
         LOGGER.debug("\nEnter ID to delete user: ");
         int id = SCANNER.nextInt();
         userController.delete(id);
         LOGGER.debug("Deleted user, id = " + id);
+        showMenu.displayMenu();
     }
 
 
-    private void getAllHubs() throws SQLException {
-        
-        LOGGER.debug(hubController.findAll().toString());
+    private void getAllHubs() {
+        hubController.findAll();
     }
 
-    private void getHubById() throws SQLException {
+    private void getHubById() {
         LOGGER.debug("\nEnter Id: ");
         Integer id = SCANNER.nextInt();
         LOGGER.debug(hubController.findById(id).toString());
+        showMenu.displayMenu();
     }
 
     private Hub getHubInputs() {
@@ -171,39 +178,42 @@ public final class View {
                 usersMax, roomsMax, devicesMax, sirensMax, onBattery);
     }
 
-    private void createHub() throws SQLException {
-        
+    private void createHub() {
         Hub hub = getHubInputs();
         hubController.create(hub);
-        LOGGER.debug("Hub was added to the table.\nEnter numbers: ");
+        LOGGER.debug("Hub was added to the table.");
+        showMenu.displayMenu();
     }
 
-    private void updateHub() throws SQLException {
+    private void updateHub() {
         LOGGER.debug("\nEnter id to update:");
         Integer id = SCANNER.nextInt();
         Hub hub = getHubInputs();
         hub.setId(id);
         hubController.update(hub.getId(), hub);
         LOGGER.debug("Updated hub, id = " + id);
+        showMenu.displayMenu();
     }
 
-    private void deleteHub() throws SQLException {
+    private void deleteHub() {
         LOGGER.debug("\nEnter id to delete hub: ");
         Integer id = SCANNER.nextInt();
         hubController.delete(id);
         LOGGER.debug("Deleted hub, id = " + id);
+        showMenu.displayMenu();
     }
 
 
-    private void getAllDevices() throws SQLException {
-        
-        LOGGER.debug(deviceController.findAll().toString());
+    private void getAllDevices() {
+        deviceController.findAll();
+        showMenu.displayMenu();
     }
 
-    private void getDeviceByName() throws SQLException {
+    private void getDeviceByName() {
         LOGGER.debug("\nEnter Id: ");
         Integer id = SCANNER.nextInt();
         LOGGER.debug(deviceController.findById(id).toString());
+        showMenu.displayMenu();
     }
 
     private Device getDeviceInputs() {
@@ -220,90 +230,99 @@ public final class View {
         Integer onBattery = SCANNER.nextInt();
         LOGGER.debug("Enter hub_id: ");
         Integer hubId = SCANNER.nextInt();
+        Hub hubEntity = hubController.findById(hubId);
         return new Device(model, status, serviceLifeEndTime, warrantyEndTime,
-                onBattery, hubId);
+                onBattery, hubEntity);
     }
 
-    private void createDevice() throws SQLException {
-        
+    private void createDevice() {
         Device device = getDeviceInputs();
         deviceController.create(device);
-        LOGGER.debug("Device was added to the table.\nEnter numbers: ");
+        LOGGER.debug("Device was added to the table.");
+        showMenu.displayMenu();
     }
 
-    private void updateDevice() throws SQLException {
+    private void updateDevice() {
         LOGGER.debug("\nEnter id to update : ");
         Integer id = SCANNER.nextInt();
         Device device = getDeviceInputs();
         device.setId(id);
         deviceController.update(device.getId(), device);
         LOGGER.debug("Updated device, id = " + id);
+        showMenu.displayMenu();
     }
 
-    private void deleteDevice() throws SQLException {
+    private void deleteDevice() {
         LOGGER.debug("\nEnter id to delete device: ");
         Integer id = SCANNER.nextInt();
         deviceController.delete(id);
         LOGGER.debug("Deleted device, id = " + id);
+        showMenu.displayMenu();
     }
 
 
-    private void getAllNotifications() throws SQLException {
-        
-        LOGGER.debug(notificationController.findAll().toString());
+    private void getAllNotifications() {
+        notificationController.findAll();
+        showMenu.displayMenu();
     }
 
-    private void getNotificationById() throws SQLException {
+    private void getNotificationById() {
         LOGGER.debug("\nEnter Id: ");
         Integer id = SCANNER.nextInt();
         LOGGER.debug(notificationController.findById(id).toString());
+        showMenu.displayMenu();
     }
 
     private Notification getNotificationInputs() {
-        LOGGER.debug("Enter timestamp: ");
+        LOGGER.debug("Enter timestamp: ");SCANNER.nextLine();
         Timestamp timestamp = Timestamp.valueOf(SCANNER.nextLine());
         LOGGER.debug("Enter type: ");
         String type = SCANNER.next();
         LOGGER.debug("\nEnter device_id: ");
         Integer deviceId = SCANNER.nextInt();
+        Device deviceEntity = deviceController.findById(deviceId);
         LOGGER.debug("\nEnter hub_id: ");
         Integer hubId = SCANNER.nextInt();
-        return new Notification(timestamp, type, deviceId, hubId);
+        Hub hubEntity = hubController.findById(hubId);
+        return new Notification(null, timestamp, type, deviceEntity, hubEntity);
     }
 
-    private void createNotification() throws SQLException {
-        
+    private void createNotification() {
         Notification notification = getNotificationInputs();
         notificationController.create(notification);
-        LOGGER.debug("Notification was added to the table.\nEnter numbers: ");
+        LOGGER.debug("Notification was added to the table.");
+        showMenu.displayMenu();
     }
 
-    private void updateNotification() throws SQLException {
+    private void updateNotification() {
         LOGGER.debug("\nEnter id to update:");
         Integer id = SCANNER.nextInt();
         Notification notification = getNotificationInputs();
         notification.setId(id);
         notificationController.update(notification.getId(), notification);
         LOGGER.debug("Updated notification, id = " + id);
+        showMenu.displayMenu();
     }
 
-    private void deleteNotification() throws SQLException {
+    private void deleteNotification() {
         LOGGER.debug("\nEnter id to delete notification: ");
         Integer id = SCANNER.nextInt();
         notificationController.delete(id);
         LOGGER.debug("Deleted notification, id = " + id);
+        showMenu.displayMenu();
     }
 
 
-    private void getAllGroups() throws SQLException {
-        
-        LOGGER.debug(groupController.findAll().toString());
+    private void getAllGroups() {
+        groupController.findAll();
+        showMenu.displayMenu();
     }
 
-    private void getGroupById() throws SQLException {
+    private void getGroupById() {
         LOGGER.debug("\nEnter ID: ");
         Integer id = SCANNER.nextInt();
         LOGGER.debug(groupController.findById(id).toString());
+        showMenu.displayMenu();
     }
 
     private Group getGroupInputs() {
@@ -313,85 +332,102 @@ public final class View {
         String description = SCANNER.next();
         LOGGER.debug("Enter hub_id: ");
         Integer hubId = SCANNER.nextInt();
-        return new Group(name, description, hubId);
+        Hub hubEntity = hubController.findById(hubId);
+        return new Group(name, description, hubEntity);
     }
 
-    private void createGroup() throws SQLException {
-        
+    private void createGroup() {
         Group group = getGroupInputs();
         groupController.create(group);
-        LOGGER.debug("Group was added to the table.\nEnter numbers: ");
+        LOGGER.debug("Group was added to the table.");
+        showMenu.displayMenu();
     }
 
-    private void updateGroup() throws SQLException {
+    private void updateGroup() {
         LOGGER.debug("\nEnter id to update:");
         Integer id = SCANNER.nextInt();
         Group group = getGroupInputs();
         group.setId(id);
         groupController.update(group.getId(), group);
         LOGGER.debug("Updated group, id = " + id);
+        showMenu.displayMenu();
     }
 
-    private void deleteGroup() throws SQLException {
+    private void deleteGroup() {
         LOGGER.debug("\nEnter ID to delete group: ");
         int id = SCANNER.nextInt();
         groupController.delete(id);
         LOGGER.debug("Deleted group, id = " + id);
+        showMenu.displayMenu();
     }
 
 
-    private void getAllPermissions() throws SQLException {
-        
-        LOGGER.debug(permissionController.findAll().toString());
+    private void getAllPermissions() {
+        permissionController.findAll();
+        showMenu.displayMenu();
     }
 
-    private void getPermissionById() throws SQLException {
+    private void getPermissionById() {
         LOGGER.debug("\nEnter ID: ");
         Integer id = SCANNER.nextInt();
         LOGGER.debug(permissionController.findById(id).toString());
+        showMenu.displayMenu();
     }
 
-    private Permission getPermissionInputs() {
+    private Permission getPermissionInputs(Integer create) {
         LOGGER.debug("Enter name: ");
         String name = SCANNER.next();
         LOGGER.debug("Enter description: ");
         String description = SCANNER.next();
-        return new Permission(name, description);
+        Collection<User> permissionUsers = new ArrayList<>();
+        Collection<Group> permissionGroups = new ArrayList<>();
+        if (create == 0) {
+            LOGGER.debug("Enter permission user id: ");
+            Integer userId = SCANNER.nextInt();
+            permissionUsers.add(userController.findById(userId));
+            LOGGER.debug("Enter permission group id: ");
+            Integer groupId = SCANNER.nextInt();
+            permissionGroups.add(groupController.findById(groupId));
+        }
+        return new Permission(null, name, description, permissionUsers, permissionGroups);
     }
 
-    private void createPermission() throws SQLException {
-        
-        Permission permission = getPermissionInputs();
+    private void createPermission() {
+        Permission permission = getPermissionInputs(1);
         permissionController.create(permission);
-        LOGGER.debug("Permission was added to the table.\nEnter numbers: ");
+        LOGGER.debug("Permission was added to the table.");
+        showMenu.displayMenu();
     }
 
-    private void updatePermission() throws SQLException {
+    private void updatePermission() {
         LOGGER.debug("\nEnter id to update: ");
         Integer id = SCANNER.nextInt();
-        Permission permission = getPermissionInputs();
+        Permission permission = getPermissionInputs(0);
         permission.setId(id);
         permissionController.update(permission.getId(), permission);
         LOGGER.debug("Updated permission, id = " + id);
+        showMenu.displayMenu();
     }
 
-    private void deletePermission() throws SQLException {
+    private void deletePermission() {
         LOGGER.debug("\nEnter ID to delete permission: ");
         int id = SCANNER.nextInt();
         permissionController.delete(id);
         LOGGER.debug("Deleted permission, id = " + id);
+        showMenu.displayMenu();
     }
 
 
-    private void getAllRexes() throws SQLException {
-        
-        LOGGER.debug(rexController.findAll().toString());
+    private void getAllRexes() {
+        rexController.findAll();
+        showMenu.displayMenu();
     }
 
-    private void getRexById() throws SQLException {
+    private void getRexById() {
         LOGGER.debug("\nEnter ID: ");
         Integer id = SCANNER.nextInt();
         LOGGER.debug(rexController.findById(id).toString());
+        showMenu.displayMenu();
     }
 
     private Rex getRexInputs() {
@@ -401,29 +437,33 @@ public final class View {
         String range = SCANNER.next();
         LOGGER.debug("Enter hub_id: ");
         Integer hubId = SCANNER.nextInt();
-        return new Rex(name, range, hubId);
+        Hub hubEntity = hubController.findById(hubId);
+        return new Rex(null, name, range, hubEntity);
     }
 
-    private void createRex() throws SQLException {
-        
+    private void createRex() {
+
         Rex rex = getRexInputs();
         rexController.create(rex);
-        LOGGER.debug("Rex was added to the table.\nEnter numbers: ");
+        LOGGER.debug("Rex was added to the table.");
+        showMenu.displayMenu();
     }
 
-    private void updateRex() throws SQLException {
+    private void updateRex() {
         LOGGER.debug("\nEnter id to update: ");
         Integer id = SCANNER.nextInt();
         Rex rex = getRexInputs();
         rex.setId(id);
         rexController.update(rex.getId(), rex);
         LOGGER.debug("Updated rex, id = " + id);
+        showMenu.displayMenu();
     }
 
-    private void deleteRex() throws SQLException {
+    private void deleteRex() {
         LOGGER.debug("\nEnter id to delete rex: ");
         int id = SCANNER.nextInt();
         rexController.delete(id);
         LOGGER.debug("Deleted rex, id = " + id);
+        showMenu.displayMenu();
     }
 }

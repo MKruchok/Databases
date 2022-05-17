@@ -43,7 +43,7 @@ public class User {
     private Integer id;
     @Column(name = "email", length = 45)
     private String email;
-    @Column(name = "password", length = 45)
+    @Column(name = "user_password", length = 45)
     private String password;
     @CreationTimestamp
     @Column(name = "date_created")

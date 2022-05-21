@@ -11,15 +11,16 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public final class Permission {
+public final class Group {
   private Integer id;
-  private String permissionName;
-  private String description;
+  private String groupName;
+  private String groupDescription;
+  private Integer hubId;
 
 
   @Override
   public String toString() {
-    return "\n\nPermission: id: " + id + ", name: " + permissionName + ", description: "
-        + description;
+    return "\n\nGroup: id: " + id + ", name: " + groupName + ", description: " + groupDescription
+        + ", hub_id: " + hubId;
   }
 }

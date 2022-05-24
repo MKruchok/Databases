@@ -13,15 +13,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-public abstract class AbstractController<T, dto, id> {
-  protected abstract AbstractService<T, id> getService();
+public abstract class AbstractController<T, D, I> {
+  protected abstract AbstractService<T, I> getService();
 
-  protected abstract AbstractMapper<T, dto> getMapper();
+  protected abstract AbstractMapper<T, D> getMapper();
 
   @RequestMapping(method = RequestMethod.GET)
-  public @ResponseBody ResponseEntity<List<dto>> findAll() {
+  public @ResponseBody ResponseEntity<List<D>> findAll() {
     List<T> objects = getService().findAll();
-    List<dto> objectsDto = new ArrayList<>();
+    List<D> objectsDto = new ArrayList<>();
     for (T object : objects) {
       objectsDto.add(getMapper().mapObjectToDto(object));
     }
@@ -30,9 +30,9 @@ public abstract class AbstractController<T, dto, id> {
 
   @RequestMapping(method = RequestMethod.GET,
       value = "/{id}")
-  public @ResponseBody ResponseEntity<dto> findById(
+  public @ResponseBody ResponseEntity<D> findById(
       @PathVariable
-      id id) {
+      I id) {
     T object = getService().getById(id);
     return new ResponseEntity<>(getMapper().mapObjectToDto(object), HttpStatus.OK);
   }
@@ -58,7 +58,7 @@ public abstract class AbstractController<T, dto, id> {
       value = "/{id}")
   public @ResponseBody ResponseEntity<Void> delete(
       @PathVariable
-      id id) {
+      I id) {
     getService().delete(id);
     return new ResponseEntity<>(HttpStatus.OK);
   }

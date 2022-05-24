@@ -3,14 +3,14 @@ package com.mkruchok.service;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public abstract class AbstractService<T, id> {
-  protected abstract JpaRepository<T, id> getRepository();
+public abstract class AbstractService<T, I> {
+  protected abstract JpaRepository<T, I> getRepository();
 
   public final List<T> findAll() {
     return getRepository().findAll();
   }
 
-  public T getById(id id) {
+  public T getById(I id) {
     return getRepository().getReferenceById(id);
   }
 
@@ -22,7 +22,7 @@ public abstract class AbstractService<T, id> {
     return getRepository().save(object);
   }
 
-  public final void delete(final id id) {
+  public final void delete(final I id) {
     getRepository().deleteById(id);
   }
 

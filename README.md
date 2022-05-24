@@ -1,3 +1,3 @@
-# Lab 5
+# Lab 6
 
-JDBC Maven Hibernate JPA
+Spring Boot Maven JPA

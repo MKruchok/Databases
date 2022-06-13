@@ -1,14 +1,16 @@
 package com.mkruchok.view;
 
 import com.mkruchok.controller.implementation.DeviceController;
-import com.mkruchok.controller.implementation.GroupController;
+import com.mkruchok.controller.implementation.DevicesGroupController;
+import com.mkruchok.controller.implementation.UsersGroupController;
 import com.mkruchok.controller.implementation.HubController;
 import com.mkruchok.controller.implementation.NotificationController;
 import com.mkruchok.controller.implementation.PermissionController;
 import com.mkruchok.controller.implementation.RexController;
 import com.mkruchok.controller.implementation.UserController;
 import com.mkruchok.model.entity.Device;
-import com.mkruchok.model.entity.Group;
+import com.mkruchok.model.entity.DevicesGroup;
+import com.mkruchok.model.entity.UsersGroup;
 import com.mkruchok.model.entity.Hub;
 import com.mkruchok.model.entity.Notification;
 import com.mkruchok.model.entity.Permission;
@@ -31,7 +33,8 @@ public final class View {
   private final HubController hubController = new HubController();
   private final DeviceController deviceController = new DeviceController();
   private final NotificationController notificationController = new NotificationController();
-  private final GroupController groupController = new GroupController();
+  private final UsersGroupController usersGroupController = new UsersGroupController();
+  private final DevicesGroupController devicesGroupController = new DevicesGroupController();
   private final PermissionController permissionController = new PermissionController();
   private final UserController userController = new UserController();
   private final RexController rexController = new RexController();
@@ -62,23 +65,29 @@ public final class View {
     menu.put("44", this::updateNotification);
     menu.put("45", this::deleteNotification);
 
-    menu.put("51", this::getAllGroups);
-    menu.put("52", this::getGroupById);
-    menu.put("53", this::createGroup);
-    menu.put("54", this::updateGroup);
-    menu.put("55", this::deleteGroup);
+    menu.put("51", this::getAllUsersGroups);
+    menu.put("52", this::getUsersGroupById);
+    menu.put("53", this::createUsersGroup);
+    menu.put("54", this::updateUsersGroup);
+    menu.put("55", this::deleteUsersGroup);
 
-    menu.put("61", this::getAllPermissions);
-    menu.put("62", this::getPermissionById);
-    menu.put("63", this::createPermission);
-    menu.put("64", this::updatePermission);
-    menu.put("65", this::deletePermission);
+    menu.put("61", this::getAllDevicesGroups);
+    menu.put("62", this::getDevicesGroupById);
+    menu.put("63", this::createDevicesGroup);
+    menu.put("64", this::updateDevicesGroup);
+    menu.put("65", this::deleteDevicesGroup);
 
-    menu.put("71", this::getAllRexes);
-    menu.put("72", this::getRexById);
-    menu.put("73", this::createRex);
-    menu.put("74", this::updateRex);
-    menu.put("75", this::deleteRex);
+    menu.put("71", this::getAllPermissions);
+    menu.put("72", this::getPermissionById);
+    menu.put("73", this::createPermission);
+    menu.put("74", this::updatePermission);
+    menu.put("75", this::deletePermission);
+
+    menu.put("81", this::getAllRexes);
+    menu.put("82", this::getRexById);
+    menu.put("83", this::createRex);
+    menu.put("84", this::updateRex);
+    menu.put("85", this::deleteRex);
   }
 
   public void show() {
@@ -241,7 +250,10 @@ public final class View {
     final Integer onBattery = SCANNER.nextInt();
     LOGGER.debug("Enter hub_id: ");
     final Integer hubId = SCANNER.nextInt();
-    return new Device(null, model, status, serviceLifeEndTime, warrantyEndTime, onBattery, hubId);
+    LOGGER.debug("Enter devices_group_id: ");
+    final Integer devicesGroupId = SCANNER.nextInt();
+    return new Device(null, model, status, serviceLifeEndTime, warrantyEndTime, onBattery,
+        hubId, devicesGroupId);
   }
 
   private void createDevice() throws SQLException {
@@ -320,47 +332,84 @@ public final class View {
   }
 
 
-  private void getAllGroups() throws SQLException {
-
-    LOGGER.debug(groupController.findAll().toString());
+  private void getAllUsersGroups() throws SQLException {
+    LOGGER.debug(usersGroupController.findAll().toString());
   }
 
-  private void getGroupById() throws SQLException {
+  private void getUsersGroupById() throws SQLException {
     LOGGER.debug("\nEnter ID: ");
     final Integer id = SCANNER.nextInt();
-    LOGGER.debug(groupController.findById(id).toString());
+    LOGGER.debug(usersGroupController.findById(id).toString());
   }
 
-  private Group getGroupInputs() {
+  private UsersGroup getGroupInputs() {
     LOGGER.debug("\nEnter name: ");
     final String name = SCANNER.next();
     LOGGER.debug("\nEnter description: ");
     final String description = SCANNER.next();
     LOGGER.debug("Enter hub_id: ");
     final Integer hubId = SCANNER.nextInt();
-    return new Group(null, name, description, hubId);
+    return new UsersGroup(null, name, description, hubId);
   }
 
-  private void createGroup() throws SQLException {
-
-    Group group = getGroupInputs();
-    groupController.create(group);
+  private void createUsersGroup() throws SQLException {
+    UsersGroup group = getGroupInputs();
+    usersGroupController.create(group);
     LOGGER.debug("Group was added to the table.\nEnter numbers: ");
   }
 
-  private void updateGroup() throws SQLException {
+  private void updateUsersGroup() throws SQLException {
     LOGGER.debug("\nEnter id to update:");
     final Integer id = SCANNER.nextInt();
-    Group group = getGroupInputs();
+    UsersGroup group = getGroupInputs();
     group.setId(id);
-    groupController.update(group.getId(), group);
+    usersGroupController.update(group.getId(), group);
     LOGGER.debug("Updated group, id = " + id);
   }
 
-  private void deleteGroup() throws SQLException {
+  private void deleteUsersGroup() throws SQLException {
     LOGGER.debug("\nEnter ID to delete group: ");
     final int id = SCANNER.nextInt();
-    groupController.delete(id);
+    usersGroupController.delete(id);
+    LOGGER.debug("Deleted group, id = " + id);
+  }
+
+
+  private void getAllDevicesGroups() throws SQLException {
+    LOGGER.debug(devicesGroupController.findAll().toString());
+  }
+
+  private void getDevicesGroupById() throws SQLException {
+    LOGGER.debug("\nEnter ID: ");
+    final Integer id = SCANNER.nextInt();
+    LOGGER.debug(devicesGroupController.findById(id).toString());
+  }
+
+  private DevicesGroup getDevicesGroupInputs() {
+    LOGGER.debug("\nEnter name: ");
+    final String name = SCANNER.next();
+    return new DevicesGroup(null, name);
+  }
+
+  private void createDevicesGroup() throws SQLException {
+    DevicesGroup group = getDevicesGroupInputs();
+    devicesGroupController.create(group);
+    LOGGER.debug("Devices group was added to the table.\nEnter numbers: ");
+  }
+
+  private void updateDevicesGroup() throws SQLException {
+    LOGGER.debug("\nEnter id to update:");
+    final Integer id = SCANNER.nextInt();
+    DevicesGroup group = getDevicesGroupInputs();
+    group.setId(id);
+    devicesGroupController.update(group.getId(), group);
+    LOGGER.debug("Updated group, id = " + id);
+  }
+
+  private void deleteDevicesGroup() throws SQLException {
+    LOGGER.debug("\nEnter ID to delete group: ");
+    final int id = SCANNER.nextInt();
+    devicesGroupController.delete(id);
     LOGGER.debug("Deleted group, id = " + id);
   }
 
@@ -377,11 +426,17 @@ public final class View {
   }
 
   private Permission getPermissionInputs() {
-    LOGGER.debug("Enter name: ");
+    LOGGER.debug("Enter permission_name: ");
     final String name = SCANNER.next();
-    LOGGER.debug("Enter description: ");
-    final String description = SCANNER.next();
-    return new Permission(null, name, description);
+    LOGGER.debug("Enter hub_id: ");
+    final Integer hub_id = SCANNER.nextInt();
+    LOGGER.debug("Enter user_id: ");
+    final Integer user_id = SCANNER.nextInt();
+    LOGGER.debug("Enter group_id: ");
+    final Integer group_id = SCANNER.nextInt();
+    LOGGER.debug("Enter device_id: ");
+    final Integer device_id = SCANNER.nextInt();
+    return new Permission(null, name, hub_id, user_id, group_id, device_id);
   }
 
   private void createPermission() throws SQLException {

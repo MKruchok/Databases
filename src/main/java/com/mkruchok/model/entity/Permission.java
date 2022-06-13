@@ -5,21 +5,22 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString
 public final class Permission {
   private Integer id;
   private String permissionName;
-  private String description;
+  private Integer hub_id;
+  private Integer user_id;
+  private Integer group_id;
+  private Integer device_id;
 
 
-  @Override
-  public String toString() {
-    return "\n\nPermission: id: " + id + ", name: " + permissionName + ", description: "
-        + description;
-  }
+
 }

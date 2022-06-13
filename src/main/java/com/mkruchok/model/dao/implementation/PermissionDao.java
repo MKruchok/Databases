@@ -17,10 +17,10 @@ public final class PermissionDao implements AbstractDao<Permission> {
   private static final String GET_ALL = "SELECT * FROM ajax_curr.permission";
   private static final String GET_BY_ID = "SELECT * FROM ajax_curr.permission WHERE id=?";
   private static final String CREATE =
-      "INSERT ajax_curr.permission " + "(`permission_name`,`permission_description`)"
-          + " VALUES (?, ?)";
+      "INSERT ajax_curr.permission " + "(`permission_name`,`hub_id`,`user_id`,`group_id`,`device_id`)"
+          + " VALUES (?, ?, ?, ?, ?)";
   private static final String UPDATE =
-      "UPDATE ajax_curr.permission" + " SET permission_name=?, permission_description=? WHERE id=?";
+      "UPDATE ajax_curr.permission" + " SET permission_name=?, hub_id=?, user_id=?, group_id=?, device_id=? WHERE id=?";
   private static final String DELETE = "DELETE FROM ajax_curr.permission WHERE id=?";
 
   @Override
@@ -32,7 +32,10 @@ public final class PermissionDao implements AbstractDao<Permission> {
     while (resultSet.next()) {
       Permission permission = new Permission(resultSet.getInt("id"),
           resultSet.getString("permission_name"),
-          resultSet.getString("permission_description"));
+          resultSet.getInt("hub_id"),
+          resultSet.getInt("user_id"),
+          resultSet.getInt("group_id"),
+          resultSet.getInt("device_id"));
       permissions.add(permission);
     }
     resultSet.close();
@@ -49,7 +52,10 @@ public final class PermissionDao implements AbstractDao<Permission> {
     while (resultSet.next()) {
       permission = new Permission(resultSet.getInt("id"),
           resultSet.getString("permission_name"),
-          resultSet.getString("permission_description"));
+          resultSet.getInt("hub_id"),
+          resultSet.getInt("user_id"),
+          resultSet.getInt("group_id"),
+          resultSet.getInt("device_id"));
     }
     resultSet.close();
     return permission;
@@ -59,7 +65,10 @@ public final class PermissionDao implements AbstractDao<Permission> {
   public void create(Permission permission) throws SQLException {
     PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(CREATE);
     statement.setString(1, permission.getPermissionName());
-    statement.setString(2, permission.getDescription());
+    statement.setInt(2, permission.getHub_id());
+    statement.setInt(3, permission.getUser_id());
+    statement.setInt(4, permission.getGroup_id());
+    statement.setInt(5, permission.getDevice_id());
     statement.executeUpdate();
     LOGGER.info(String.valueOf(statement));
 
@@ -69,7 +78,10 @@ public final class PermissionDao implements AbstractDao<Permission> {
   public void update(Integer id, Permission permission) throws SQLException {
     PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(UPDATE);
     statement.setString(1, permission.getPermissionName());
-    statement.setString(2, permission.getDescription());
+    statement.setInt(2, permission.getHub_id());
+    statement.setInt(4, permission.getGroup_id());
+    statement.setInt(3, permission.getUser_id());
+    statement.setInt(5, permission.getDevice_id());
     statement.setInt(3, permission.getId());
     statement.executeUpdate();
     LOGGER.info(String.valueOf(statement));

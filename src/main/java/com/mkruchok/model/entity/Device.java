@@ -5,12 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString
 public final class Device {
   private Integer id;
   private String model;
@@ -19,12 +21,8 @@ public final class Device {
   private Timestamp warrantyEndTime;
   private Integer onBattery;
   private Integer hubId;
+  private Integer devicesGroupId;
 
 
-  @Override
-  public String toString() {
-    return "\n\nDevice: id: " + id + ", model: " + model + ", status: " + deviceStatus
-        + ", service_life_end_time: " + serviceLifeEndTime + ", warranty_end_time: "
-        + warrantyEndTime + ", on_battery: " + onBattery + ", hub_id: " + hubId;
-  }
+
 }

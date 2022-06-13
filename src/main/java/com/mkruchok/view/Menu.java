@@ -17,9 +17,10 @@ public final class Menu {
     LOGGER.debug("| 2 | hub              | 2 | GET ROW BY ID        |");
     LOGGER.debug("| 3 | device           | 3 | CREATE ROW           |");
     LOGGER.debug("| 4 | notification     | 4 | UPDATE ROW           |");
-    LOGGER.debug("| 5 | group            | 5 | DELETE ROW           |");
-    LOGGER.debug("| 6 | permission       |   |                      |");
-    LOGGER.debug("| 7 | rex              |   |                      |");
+    LOGGER.debug("| 5 | userGroup        | 5 | DELETE ROW           |");
+    LOGGER.debug("| 6 | devicesGroup     | 5 | DELETE ROW           |");
+    LOGGER.debug("| 7 | permission       |   |                      |");
+    LOGGER.debug("| 8 | rex              |   |                      |");
     LOGGER.debug("|___|__________________|___|______________________|");
   }
 }

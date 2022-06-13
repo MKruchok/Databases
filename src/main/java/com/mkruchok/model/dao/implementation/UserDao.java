@@ -17,10 +17,10 @@ public final class UserDao implements AbstractDao<User> {
   private static final String GET_ALL = "SELECT * FROM ajax_curr.user";
   private static final String GET_BY_ID = "SELECT * FROM ajax_curr.user WHERE id=?";
   private static final String CREATE = "INSERT ajax_curr.user "
-      + "(`email`, `user_password`, `date_created`, `user_name`, `group_id`)"
+      + "(`email`, `user_password`, `date_created`, `user_name`, `users_group_id`)"
       + " VALUES (?, ?, ?, ?, ?)";
   private static final String UPDATE = "UPDATE ajax_curr.user"
-      + " SET email=?, user_password=?, date_created=?, user_name=?, group_id=? WHERE id=?";
+      + " SET email=?, user_password=?, date_created=?, user_name=?, users_group_id=? WHERE id=?";
   private static final String DELETE = "DELETE FROM ajax_curr.user WHERE id=?";
 
   @Override
@@ -35,7 +35,7 @@ public final class UserDao implements AbstractDao<User> {
           resultSet.getString("user_password"),
           resultSet.getTimestamp("date_created"),
           resultSet.getString("user_name"),
-          resultSet.getString("group_id"));
+          resultSet.getString("users_group_id"));
       users.add(user);
     }
     resultSet.close();
@@ -55,7 +55,7 @@ public final class UserDao implements AbstractDao<User> {
           resultSet.getString("user_password"),
           resultSet.getTimestamp("date_created"),
           resultSet.getString("user_name"),
-          resultSet.getString("group_id"));
+          resultSet.getString("users_group_id"));
     }
     resultSet.close();
     return user;
@@ -68,7 +68,7 @@ public final class UserDao implements AbstractDao<User> {
     statement.setString(2, user.getUserPassword());
     statement.setTimestamp(3, user.getDateCreated());
     statement.setString(4, user.getUserName());
-    statement.setString(5, user.getGroupId());
+    statement.setString(5, user.getUsersGroupId());
     statement.executeUpdate();
     LOGGER.info(String.valueOf(statement));
 
@@ -81,7 +81,7 @@ public final class UserDao implements AbstractDao<User> {
     statement.setTimestamp(3, user.getDateCreated());
     statement.setString(2, user.getUserPassword());
     statement.setString(4, user.getUserName());
-    statement.setString(5, user.getGroupId());
+    statement.setString(5, user.getUsersGroupId());
     statement.setInt(6, user.getId());
     statement.executeUpdate();
     LOGGER.info(String.valueOf(statement));

@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public final class Group {
+public final class UsersGroup {
   private Integer id;
   private String groupName;
   private String groupDescription;

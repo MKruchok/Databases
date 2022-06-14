@@ -35,16 +35,19 @@ public class Notification {
   @CreationTimestamp
   @Column(name = "timestamp")
   private Timestamp timestamp;
-  @Column(name = "notification_type", length = 45)
+  @Column(name = "notification_type",
+      length = 45)
   private String type;
 
 
   @ManyToOne
-  @JoinColumn(name = "device_id", referencedColumnName = "id")
+  @JoinColumn(name = "device_id",
+      referencedColumnName = "id")
   private Device deviceId;
 
   @ManyToOne
-  @JoinColumn(name = "hub_id", referencedColumnName = "id")
+  @JoinColumn(name = "hub_id",
+      referencedColumnName = "id")
   private Hub hubNotificationId;
 
 

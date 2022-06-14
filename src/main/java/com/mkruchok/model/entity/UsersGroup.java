@@ -8,8 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
@@ -23,7 +21,7 @@ import lombok.ToString;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
-@Table(name = "hub_group")
+@Table(name = "users_group")
 
 @AllArgsConstructor
 @ToString
@@ -32,32 +30,34 @@ import org.hibernate.annotations.LazyCollectionOption;
 @Setter
 @Entity
 @NoArgsConstructor
-public class Group {
-  @OrderColumn
-  @ManyToMany
-  @LazyCollection(LazyCollectionOption.FALSE)
-  @JoinTable(name = "group_has_permission",
-      joinColumns = @JoinColumn(name = "group_id"),
-      inverseJoinColumns = @JoinColumn(name = "permission_id"))
-  @ToString.Exclude
-  Collection<Permission> groupHasPermissions;
+public class UsersGroup {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
   private Integer id;
-  @Column(name = "group_name", length = 45)
+  @Column(name = "group_name",
+      length = 45)
   private String name;
-  @Column(name = "group_description", length = 150)
+  @Column(name = "group_description",
+      length = 150)
   private String groupDescription;
   @ManyToOne
-  @JoinColumn(name = "hub_id", referencedColumnName = "id")
+  @JoinColumn(name = "hub_id",
+      referencedColumnName = "id")
   private Hub hubGroupId;
   @OrderColumn
-  @OneToMany(mappedBy = "groupId", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "groupId",
+      fetch = FetchType.LAZY)
   @ToString.Exclude
   private Collection<User> users;
+  @OrderColumn
+  @LazyCollection(LazyCollectionOption.FALSE)
+  @OneToMany(mappedBy = "groupId")
+  @ToString.Exclude
+  private Collection<Permission> permissions;
 
-  public Group(String name, String description, Hub hubId) {
+
+  public UsersGroup(String name, String description, Hub hubId) {
     this.name = name;
     this.groupDescription = description;
     this.hubGroupId = hubId;

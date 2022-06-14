@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!DOCTYPE hibernate-configuration PUBLIC
-      "-//Hibernate/Hibernate Configuration DTD//EN"
-      "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+        "-//Hibernate/Hibernate Configuration DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
     <session-factory>
         <property name="connection.url">jdbc:mysql://localhost:3306/ajax_curr</property>
@@ -12,7 +12,8 @@
         <mapping class="com.mkruchok.model.entity.Hub"/>
         <mapping class="com.mkruchok.model.entity.Rex"/>
         <mapping class="com.mkruchok.model.entity.Permission"/>
-        <mapping class="com.mkruchok.model.entity.Group"/>
+        <mapping class="com.mkruchok.model.entity.UsersGroup"/>
+        <mapping class="com.mkruchok.model.entity.DevicesGroup"/>
         <mapping class="com.mkruchok.model.entity.Notification"/>
         <mapping class="com.mkruchok.model.entity.Device"/>
         <mapping class="com.mkruchok.model.entity.User"/>

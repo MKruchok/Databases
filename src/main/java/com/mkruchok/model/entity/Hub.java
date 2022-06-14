@@ -46,36 +46,48 @@ public class Hub {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
   private Integer id;
-  @Column(name = "model", length = 45)
+  @Column(name = "model",
+      length = 45)
   private String model;
-  @Column(name = "hub_status", length = 45)
+  @Column(name = "hub_status",
+      length = 45)
   private String status;
   @CreationTimestamp
-  @Column(name = "service_life_end_time", length = 45)
+  @Column(name = "service_life_end_time",
+      length = 45)
   private Timestamp serviceLifeEndTime;
   @CreationTimestamp
-  @Column(name = "warranty_end_time", length = 45)
+  @Column(name = "warranty_end_time",
+      length = 45)
   private Timestamp warrantyEndTime;
-  @Column(name = "users_max", length = 45)
+  @Column(name = "users_max",
+      length = 45)
   private Integer usersMax;
-  @Column(name = "rooms_max", length = 45)
+  @Column(name = "rooms_max",
+      length = 45)
   private Integer roomsMax;
-  @Column(name = "devices_max", length = 45)
+  @Column(name = "devices_max",
+      length = 45)
   private Integer devicesMax;
-  @Column(name = "sirens_max", length = 45)
+  @Column(name = "sirens_max",
+      length = 45)
   private Integer sirensMax;
-  @Column(name = "on_battery", length = 1)
+  @Column(name = "on_battery",
+      length = 1)
   private Integer onBattery;
   @OrderColumn
-  @OneToMany(mappedBy = "hubGroupId", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "hubGroupId",
+      fetch = FetchType.LAZY)
   @ToString.Exclude
-  private Collection<Group> groups;
+  private Collection<UsersGroup> userGroups;
   @OrderColumn
-  @OneToMany(mappedBy = "hubRexId", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "hubRexId",
+      fetch = FetchType.LAZY)
   @ToString.Exclude
   private Collection<Rex> rexes;
   @OrderColumn
-  @OneToMany(mappedBy = "hubNotificationId", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "hubNotificationId",
+      fetch = FetchType.LAZY)
   @ToString.Exclude
   private Collection<Notification> notifications;
   @OrderColumn
@@ -83,11 +95,20 @@ public class Hub {
   @OneToMany(mappedBy = "hubId")
   @ToString.Exclude
   private Collection<Device> devices;
+  @OrderColumn
+  @LazyCollection(LazyCollectionOption.FALSE)
+  @OneToMany(mappedBy = "hubId")
+  @ToString.Exclude
+  private Collection<Permission> permissions;
 
-  public Hub(
-      String model, String status, Timestamp serviceLifeEndTime,
+  public Hub(String model,
+      String status,
+      Timestamp serviceLifeEndTime,
       Timestamp warrantyEndTime,
-      Integer usersMax, Integer roomsMax, Integer devicesMax, Integer sirensMax,
+      Integer usersMax,
+      Integer roomsMax,
+      Integer devicesMax,
+      Integer sirensMax,
       Integer onBattery) {
     this.model = model;
     this.status = status;

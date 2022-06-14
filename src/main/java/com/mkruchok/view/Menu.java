@@ -17,11 +17,11 @@ public final class Menu {
         + "| 2 | hub              | 2 | GET ROW BY ID        |\n"
         + "| 3 | device           | 3 | CREATE ROW           |\n"
         + "| 4 | notification     | 4 | UPDATE ROW           |\n"
-        + "| 5 | group            | 5 | DELETE ROW           |\n"
-        + "| 6 | permission       |   |                      |\n"
-        + "| 7 | rex              |   |                      |\n"
-        + "|___|__________________|___|______________________|\n"
-        + "Enter numbers:"
+        + "| 5 | userGroup        | 5 | DELETE ROW           |\n"
+        + "| 6 | devicesGroup     | 5 | DELETE ROW           |\n"
+        + "| 7 | permission       |   |                      |\n"
+        + "| 8 | rex              |   |                      |\n"
+        + "|___|__________________|___|______________________|\n" + "Enter numbers:"
 
     );
   }

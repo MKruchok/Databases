@@ -1,12 +1,14 @@
 package com.mkruchok.model.entity;
 
+import java.util.Collection;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -15,33 +17,28 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-
-@Table(name = "rex")
+@Table(name = "devices_group")
 
 @AllArgsConstructor
-@NoArgsConstructor
 @ToString
 @EqualsAndHashCode(of = "id")
 @Getter
 @Setter
 @Entity
-public class Rex {
+@NoArgsConstructor
+public class DevicesGroup {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
   private Integer id;
-  @Column(name = "rex_name",
+  @Column(name = "group_name",
       length = 45)
   private String name;
-  @Column(name = "rex_range",
-      length = 45)
-  private String range;
-
-
-  @ManyToOne
-  @JoinColumn(name = "hub_id",
-      referencedColumnName = "id")
-  private Hub hubRexId;
+  @OrderColumn
+  @OneToMany(mappedBy = "devicesGroupId",
+      fetch = FetchType.LAZY)
+  @ToString.Exclude
+  private Collection<Device> devices;
 
 
 }

@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -30,7 +31,6 @@ import org.hibernate.annotations.LazyCollectionOption;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode(of = "id")
-
 @Getter
 @Setter
 @Entity
@@ -39,18 +39,22 @@ public class User {
   @Column(name = "id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
-  @Column(name = "email", length = 45)
+  @Column(name = "email",
+      length = 45)
   private String email;
-  @Column(name = "user_password", length = 45)
+  @Column(name = "user_password",
+      length = 45)
   private String password;
   @CreationTimestamp
   @Column(name = "date_created")
   private Timestamp dateCreated;
-  @Column(name = "user_name", length = 45)
+  @Column(name = "user_name",
+      length = 45)
   private String name;
   @ManyToOne
-  @JoinColumn(name = "group_id", referencedColumnName = "id")
-  private Group groupId;
+  @JoinColumn(name = "users_group_id",
+      referencedColumnName = "id")
+  private UsersGroup groupId;
   @OrderColumn
   @ManyToMany
   @LazyCollection(LazyCollectionOption.FALSE)
@@ -60,13 +64,10 @@ public class User {
   @ToString.Exclude
   private Collection<Hub> userHasHubs;
   @OrderColumn
-  @ManyToMany
   @LazyCollection(LazyCollectionOption.FALSE)
-  @JoinTable(name = "user_has_permission",
-      joinColumns = @JoinColumn(name = "user_id"),
-      inverseJoinColumns = @JoinColumn(name = "permission_id"))
+  @OneToMany(mappedBy = "userId")
   @ToString.Exclude
-  private Collection<Permission> userHasPermissions;
+  private Collection<Permission> permissions;
 
 
 }

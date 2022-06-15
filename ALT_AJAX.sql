@@ -94,25 +94,25 @@ CREATE TABLE IF NOT EXISTS `ajax_curr`.`device` (
 ENGINE = InnoDB;
 
 INSERT INTO `AJAX_CURR`.`device` (`id`,`model`,`device_status`,`service_life_end_time`,`warranty_end_time`,`on_battery`,`hub_id`,`devices_group_id`)
-VALUES (1,'motion_cam','online',default,default,1,1,0);
+VALUES (1,'motion_cam','online',default,default,1,1,1);
 INSERT INTO `AJAX_CURR`.`device` (`id`,`model`,`device_status`,`service_life_end_time`,`warranty_end_time`,`on_battery`,`hub_id`,`devices_group_id`)
-VALUES (2,'motion_protect','online',default,default,1,2,0);
+VALUES (2,'motion_protect','online',default,default,1,2,1);
 INSERT INTO `AJAX_CURR`.`device` (`id`,`model`,`device_status`,`service_life_end_time`,`warranty_end_time`,`on_battery`,`hub_id`,`devices_group_id`)
-VALUES (3,'motion_protect_plus','online',(CURRENT_DATE + INTERVAL 20 YEAR),(CURRENT_DATE + INTERVAL 10 YEAR),0,2,0);
+VALUES (3,'motion_protect_plus','online',(CURRENT_DATE + INTERVAL 20 YEAR),(CURRENT_DATE + INTERVAL 10 YEAR),0,2,1);
 INSERT INTO `AJAX_CURR`.`device` (`id`,`model`,`device_status`,`service_life_end_time`,`warranty_end_time`,`on_battery`,`hub_id`,`devices_group_id`)
-VALUES (4,'combi_protect','online',default,default,0,2,0);
+VALUES (4,'combi_protect','online',default,default,0,2,1);
 INSERT INTO `AJAX_CURR`.`device` (`id`,`model`,`device_status`,`service_life_end_time`,`warranty_end_time`,`on_battery`,`hub_id`,`devices_group_id`)
-VALUES (5,'motion_protect_curtain','offline',default,default,1,4,0);
+VALUES (5,'motion_protect_curtain','offline',default,default,1,4,1);
 INSERT INTO `AJAX_CURR`.`device` (`id`,`model`,`device_status`,`service_life_end_time`,`warranty_end_time`,`on_battery`,`hub_id`,`devices_group_id`)
-VALUES (6,'door_protect','online',default,default,1,5,1);
+VALUES (6,'door_protect','online',default,default,1,5,3);
 INSERT INTO `AJAX_CURR`.`device` (`id`,`model`,`device_status`,`service_life_end_time`,`warranty_end_time`,`on_battery`,`hub_id`,`devices_group_id`)
-VALUES (7,'glass_protect','online',default,default,1,6,1);
+VALUES (7,'glass_protect','online',default,default,1,6,5);
 INSERT INTO `AJAX_CURR`.`device` (`id`,`model`,`device_status`,`service_life_end_time`,`warranty_end_time`,`on_battery`,`hub_id`,`devices_group_id`)
-VALUES (8,'dual_curtain_outdoor','online',(CURRENT_DATE + INTERVAL 18 YEAR),(CURRENT_DATE + INTERVAL 10 YEAR),1,6,1);
+VALUES (8,'dual_curtain_outdoor','online',(CURRENT_DATE + INTERVAL 18 YEAR),(CURRENT_DATE + INTERVAL 10 YEAR),1,6,10);
 INSERT INTO `AJAX_CURR`.`device` (`id`,`model`,`device_status`,`service_life_end_time`,`warranty_end_time`,`on_battery`,`hub_id`,`devices_group_id`)
-VALUES (9,'glass_protect','offline',default,default,1,6,1);
+VALUES (9,'glass_protect','offline',default,default,1,6,8);
 INSERT INTO `AJAX_CURR`.`device` (`id`,`model`,`device_status`,`service_life_end_time`,`warranty_end_time`,`on_battery`,`hub_id`,`devices_group_id`)
-VALUES (10,'leaks_protect','online',default,default,1,8,1);
+VALUES (10,'leaks_protect','online',default,default,1,8,8);
 
 
 DROP TABLE IF EXISTS `AJAX_CURR`.`notification` ;
@@ -222,7 +222,7 @@ INSERT INTO `AJAX_CURR`.`user` (`id`,`email`,`user_password`,`date_created`,`use
 VALUES
   (1,'sit.amet.risus@aol.couk','CXY46CKU5LF','2021-10-26 12:15:35','Adrian',7),
   (2,'tristique.pellentesque.tellus@hotmail.net','FLD22VJW7LP','2022-04-8 10:50:14','Oprah',7),
-  (3,'at.iaculis@google.net','RSL21QLS2YI','2022-07-9 10:05:04','John',0),
+  (3,'at.iaculis@google.net','RSL21QLS2YI','2022-07-9 10:05:04','John',1),
   (4,'enim.consequat@protonmail.ca','PUP58PPI6UG','2021-12-21 05:08:33','Flynn',7),
   (5,'ac.mattis@protonmail.ca','XIP05FJS3AK','2022-03-16 07:39:47','Ila',1),
   (6,'nam.consequat.dolor@protonmail.ca','ZWW48EZV4AV','2023-02-3 10:39:57','Chantale',4),

@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -52,9 +53,10 @@ public class User {
       length = MagicNumber.L45)
   private String name;
   @ManyToOne(cascade = CascadeType.MERGE)
-  @JoinColumn(name = "group_id",
+  @JoinColumn(name = "users_group_id",
       referencedColumnName = "id")
-  private Group groupId;
+  private UsersGroup usersGroupId;
+  @OrderColumn
   @ManyToMany(cascade = CascadeType.ALL)
   @LazyCollection(LazyCollectionOption.FALSE)
   @JoinTable(name = "user_has_hub",
@@ -63,11 +65,11 @@ public class User {
   @ToString.Exclude
   private Collection<Hub> userHasHubs;
   @OrderColumn
-  @ManyToMany(cascade = CascadeType.ALL)
   @LazyCollection(LazyCollectionOption.FALSE)
-  @JoinTable(name = "user_has_permission",
-      joinColumns = @JoinColumn(name = "user_id"),
-      inverseJoinColumns = @JoinColumn(name = "permission_id"))
+  @OneToMany(mappedBy = "userId",
+      cascade = CascadeType.ALL)
   @ToString.Exclude
-  private Collection<Permission> userHasPermissions;
+  private Collection<Permission> permissions;
+
+
 }

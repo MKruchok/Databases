@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+    <!--    may expose internal configuration by storing -->
+    <!--    externally mutable object (Timestamps)-->
+    <Match>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Bug pattern="EI_EXPOSE_REP"/>
+    </Match>
+    <!--    OpenAPI is not useless-->
+    <Match>
+        <Class name="com.mkruchok.config.SwaggerConfiguration"/>
+        <Bug pattern="UC_USELESS_OBJECT"/>
+    </Match>
+</FindBugsFilter>

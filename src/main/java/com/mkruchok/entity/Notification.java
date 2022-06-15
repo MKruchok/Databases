@@ -1,7 +1,5 @@
 package com.mkruchok.entity;
 
-
-import com.fasterxml.jackson.annotation.JsonInclude;
 import java.sql.Timestamp;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -26,7 +24,6 @@ import org.hibernate.annotations.CreationTimestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
-@JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
 @Setter
 @ToString
@@ -45,13 +42,11 @@ public class Notification {
 
 
   @ManyToOne(cascade = CascadeType.MERGE)
-
   @JoinColumn(name = "device_id",
       referencedColumnName = "id")
   private Device deviceId;
 
   @ManyToOne(cascade = CascadeType.MERGE)
-
   @JoinColumn(name = "hub_id",
       referencedColumnName = "id")
   private Hub hubNotificationId;

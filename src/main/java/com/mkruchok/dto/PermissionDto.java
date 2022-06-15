@@ -13,8 +13,9 @@ import lombok.NoArgsConstructor;
 public class PermissionDto {
   private Integer id;
   private String name;
-  private String permissionDescription;
 
-  private Integer permissionHasUsersCounter;
-  private Integer permissionHasGroupsCounter;
+  private String hubModel;
+  private String userName;
+  private String usersGroupName;
+  private String deviceModel;
 }

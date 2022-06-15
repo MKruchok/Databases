@@ -15,9 +15,11 @@ public class PermissionMapper extends AbstractMapper<Permission, PermissionDto> 
     PermissionDto.PermissionBuilder permissionDtoBuilder = PermissionDto.builder()
         .id(permission.getId())
         .name(permission.getName())
-        .permissionDescription(permission.getPermissionDescription())
-        .permissionHasUsersCounter(permission.getPermissionHasUsers().size())
-        .permissionHasGroupsCounter(permission.getPermissionHasGroups().size());
+        .hubModel(permission.getHubId() == null ? null : permission.getHubId().getModel())
+        .userName(permission.getUserId() == null ? null : permission.getUserId().getName())
+        .usersGroupName(
+            permission.getUsersGroupId() == null ? null : permission.getUsersGroupId().getName())
+        .deviceModel(permission.getDeviceId() == null ? null : permission.getDeviceId().getModel());
     return permissionDtoBuilder.build();
   }
 }

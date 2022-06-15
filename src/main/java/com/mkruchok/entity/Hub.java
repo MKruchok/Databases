@@ -10,6 +10,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
@@ -34,6 +36,14 @@ import org.hibernate.annotations.LazyCollectionOption;
 @Setter
 @Entity
 public class Hub {
+  @OrderColumn
+  @LazyCollection(LazyCollectionOption.FALSE)
+  @ManyToMany
+  @JoinTable(name = "user_has_hub",
+      joinColumns = @JoinColumn(name = "hub_id"),
+      inverseJoinColumns = @JoinColumn(name = "user_id"))
+  @ToString.Exclude
+  Collection<Hub> hubHasUsers;
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
@@ -72,7 +82,7 @@ public class Hub {
       cascade = CascadeType.ALL,
       fetch = FetchType.LAZY)
   @ToString.Exclude
-  private Collection<Group> groups;
+  private Collection<UsersGroup> usersGroups;
   @OrderColumn
   @OneToMany(mappedBy = "hubRexId",
       cascade = CascadeType.ALL,
@@ -98,12 +108,8 @@ public class Hub {
 
   @OrderColumn
   @LazyCollection(LazyCollectionOption.FALSE)
-  @ManyToMany(mappedBy = "userHasHubs",
-      cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "hubId")
   @ToString.Exclude
-  private Collection<User> hubHasUsers;
+  private Collection<Permission> permissions;
 
-  public Hub(String s) {
-    this.model = s;
-  }
 }

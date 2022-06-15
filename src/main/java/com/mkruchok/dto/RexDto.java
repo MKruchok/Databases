@@ -15,5 +15,5 @@ public class RexDto {
   private String name;
   private String range;
 
-  private String hubRexModel;
+  private String rexHubModel;
 }

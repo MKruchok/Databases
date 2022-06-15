@@ -17,8 +17,8 @@ public class NotificationMapper extends AbstractMapper<Notification, Notificatio
         .timestamp(notification.getTimestamp())
         .type(notification.getType())
         .deviceModel(
-            notification.getDeviceId() == null ? "null" : notification.getDeviceId().getModel())
-        .hubModel(notification.getHubNotificationId() == null ? "null" :
+            notification.getDeviceId() == null ? null : notification.getDeviceId().getModel())
+        .hubModel(notification.getHubNotificationId() == null ? null :
             notification.getHubNotificationId().getModel());
     return notificationDtoBuilder.build();
   }

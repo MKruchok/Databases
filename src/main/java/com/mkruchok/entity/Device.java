@@ -1,6 +1,5 @@
 package com.mkruchok.entity;
 
-
 import java.sql.Timestamp;
 import java.util.Collection;
 import javax.persistence.CascadeType;
@@ -26,6 +25,7 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 @Table(name = "device")
+
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
@@ -56,10 +56,14 @@ public class Device {
 
 
   @ManyToOne(cascade = CascadeType.MERGE)
-
   @JoinColumn(name = "hub_id",
       referencedColumnName = "id")
   private Hub hubId;
+
+  @ManyToOne(cascade = CascadeType.MERGE)
+  @JoinColumn(name = "devices_group_id",
+      referencedColumnName = "id")
+  private DevicesGroup devicesGroupId;
 
   @OrderColumn
   @LazyCollection(LazyCollectionOption.FALSE)
@@ -68,4 +72,12 @@ public class Device {
       fetch = FetchType.LAZY)
   @ToString.Exclude
   private Collection<Notification> notifications;
+
+  @OrderColumn
+  @LazyCollection(LazyCollectionOption.FALSE)
+  @OneToMany(mappedBy = "deviceId",
+      fetch = FetchType.LAZY)
+  @ToString.Exclude
+  private Collection<Permission> permissions;
+
 }

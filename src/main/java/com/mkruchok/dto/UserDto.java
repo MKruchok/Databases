@@ -13,13 +13,13 @@ import lombok.NoArgsConstructor;
 @Builder(builderClassName = "UserBuilder")
 public class UserDto {
   private Integer id;
-  private Integer groupId;
   private String email;
-  private Timestamp dateCreated;
-  private String name;
   private String password;
+  private Timestamp dateCreated;
+  private String userName;
+  private Integer usersGroupId;
 
   private String groupName;
   private Integer userHasHubsCounter;
-  private Integer userHasPermissionsCounter;
+  private Integer permissionsCounter;
 }

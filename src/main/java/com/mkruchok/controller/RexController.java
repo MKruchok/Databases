@@ -10,7 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping(value = "/rexes")
+@RequestMapping(value = "/rex")
 @AllArgsConstructor
 @RestController
 public class RexController extends AbstractController<Rex, RexDto, Integer> {

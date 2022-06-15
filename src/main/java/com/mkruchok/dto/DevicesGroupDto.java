@@ -11,14 +11,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
-@Builder(builderClassName = "GroupBuilder")
-public class GroupDto {
+@Builder(builderClassName = "DevicesGroupBuilder")
+public class DevicesGroupDto {
   private Integer id;
   private String name;
-  private String groupDescription;
-  private Integer groupHubId;
 
-  private String groupHubModel;
-  private Integer usersCounter;
-  private Integer groupHasPermissionsCounter;
+  private Integer devicesCounter;
 }

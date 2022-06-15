@@ -10,7 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping(value = "/users")
+@RequestMapping(value = "/user")
 @AllArgsConstructor
 @RestController
 public class UserController extends AbstractController<User, UserDto, Integer> {

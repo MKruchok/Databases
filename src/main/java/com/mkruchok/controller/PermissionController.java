@@ -10,7 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping(value = "/permissions")
+@RequestMapping(value = "/permission")
 @AllArgsConstructor
 @RestController
 public class PermissionController extends AbstractController<Permission, PermissionDto, Integer> {

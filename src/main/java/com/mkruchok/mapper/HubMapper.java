@@ -23,7 +23,7 @@ public class HubMapper extends AbstractMapper<Hub, HubDto> {
         .devicesMax(hub.getDevicesMax())
         .sirensMax(hub.getSirensMax())
         .onBattery(hub.getOnBattery())
-        .groupsCounter(hub.getGroups().size())
+        .groupsCounter(hub.getUsersGroups().size())
         .rexesCounter(hub.getRexes().size())
         .notificationsCounter(hub.getNotifications().size())
         .devicesCounter(hub.getDevices().size())

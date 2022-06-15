@@ -17,11 +17,11 @@ public class UserMapper extends AbstractMapper<User, UserDto> {
         .email(user.getEmail())
         .password(user.getPassword())
         .dateCreated(user.getDateCreated())
-        .name(user.getName())
-        .groupId(user.getGroupId() == null ? null : user.getGroupId().getId())
-        .groupName(user.getGroupId() == null ? "null" : user.getGroupId().getName())
-        .userHasHubsCounter(user.getUserHasHubs().size())
-        .userHasPermissionsCounter(user.getUserHasPermissions().size());
+        .userName(user.getName())
+        .usersGroupId(user.getUsersGroupId() == null ? null : user.getUsersGroupId().getId())
+        .groupName(user.getUsersGroupId() == null ? null : user.getUsersGroupId().getName())
+        .userHasHubsCounter(user.getUserHasHubs() == null ? null : user.getUserHasHubs().size())
+        .permissionsCounter(user.getPermissions() == null ? null : user.getPermissions().size());
     return userDtoBuilder.build();
   }
 }

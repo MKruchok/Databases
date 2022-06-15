@@ -10,7 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping(value = "/devices")
+@RequestMapping(value = "/device")
 @AllArgsConstructor
 @RestController
 public class DeviceController extends AbstractController<Device, DeviceDto, Integer> {

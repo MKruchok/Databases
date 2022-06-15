@@ -20,7 +20,10 @@ public class DeviceMapper extends AbstractMapper<Device, DeviceDto> {
         .warrantyEndTime(device.getWarrantyEndTime())
         .onBattery(device.getOnBattery())
         .hubModel(device.getHubId().getModel())
-        .notificationsCounter(device.getNotifications().size());
+        .notificationsCounter(
+            device.getNotifications() == null ? null : device.getNotifications().size())
+        .devicesGroupName(
+            device.getDevicesGroupId() == null ? null : device.getDevicesGroupId().getName());
 
     return deviceDtoBuilder.build();
   }

@@ -25,6 +25,6 @@ public class DeviceDto {
 
   private String hubModel;
   private Integer notificationsCounter;
-
+  private String devicesGroupName;
 
 }

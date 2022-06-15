@@ -16,7 +16,7 @@ public class RexMapper extends AbstractMapper<Rex, RexDto> {
         .id(rex.getId())
         .name(rex.getName())
         .range(rex.getRange())
-        .hubRexModel(rex.getHubRexId().getModel());
+        .rexHubModel(rex.getHubRexId() == null ? null : rex.getHubRexId().getModel());
     return rexDtoBuilder.build();
   }
 }

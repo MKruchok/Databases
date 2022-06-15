@@ -10,7 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping(value = "/hubs")
+@RequestMapping(value = "/hub")
 @AllArgsConstructor
 @RestController
 public class HubController extends AbstractController<Hub, HubDto, Integer> {

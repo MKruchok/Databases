@@ -10,7 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping(value = "/notifications")
+@RequestMapping(value = "/notification")
 @AllArgsConstructor
 @RestController
 public class NotificationController

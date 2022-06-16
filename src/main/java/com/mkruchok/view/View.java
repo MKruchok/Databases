@@ -16,12 +16,12 @@ import com.mkruchok.model.entity.Permission;
 import com.mkruchok.model.entity.Rex;
 import com.mkruchok.model.entity.User;
 import com.mkruchok.model.entity.UsersGroup;
+import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Scanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 
 public final class View {
   static final Logger LOGGER = LoggerFactory.getLogger(View.class);
-  private static final Scanner SCANNER = new Scanner(System.in, "UTF-8");
+  private static final Scanner SCANNER = new Scanner(System.in, StandardCharsets.UTF_8);
   private final Map<String, Printable> menu = new LinkedHashMap<>();
   private final HubController hubController = new HubController();
   private final DeviceController deviceController = new DeviceController();
@@ -117,7 +117,7 @@ public final class View {
     showMenu.displayMenu();
   }
 
-  private User getUserInputs(Integer create) throws NullPointerException {
+  private User getUserInputs() throws NullPointerException {
     LOGGER.debug("Enter email: ");
     final String email = SCANNER.next();
     LOGGER.debug("Enter password: ");
@@ -125,21 +125,19 @@ public final class View {
     LOGGER.debug("Enter name: ");
     final String name = SCANNER.next();
     Timestamp dateCreated = new Timestamp(System.currentTimeMillis());
-    UsersGroup groupEntity = null;
+    UsersGroup groupEntity;
     final Collection<Hub> userHubs = new ArrayList<>();
     final Collection<Permission> userPermissions = new ArrayList<>();
-    if (create == 0) {
-      LOGGER.debug("Enter group id: ");
-      final String groupId = SCANNER.next();
-      LOGGER.debug("Enter hub id to add to user or put one that he has: ");
-      final Integer hubId = SCANNER.nextInt();
-      userHubs.add(hubController.findById(hubId));
-      LOGGER.debug("Enter permission id that user has: ");
-      final Integer permissionId = SCANNER.nextInt();
-      userPermissions.add(permissionController.findById(permissionId));
-      groupEntity = Objects.equals(groupId, "null") ? null :
-          usersGroupController.findById(Integer.valueOf(groupId));
-    }
+    LOGGER.debug("Enter group id: ");
+    final int groupId = SCANNER.nextInt();
+    LOGGER.debug("Enter hub id to add or skip (0): ");
+    final int hubId = SCANNER.nextInt();
+    if (hubId != 0) userHubs.add(hubController.findById(hubId));
+    LOGGER.debug("Enter permission id to add or skip(0): ");
+    final int permissionId = SCANNER.nextInt();
+    if (permissionId != 0) userPermissions.add(permissionController.findById(permissionId));
+    groupEntity = groupId == 0 ? null : usersGroupController.findById(groupId);
+
     return new User(null,
         email,
         password,
@@ -151,7 +149,7 @@ public final class View {
   }
 
   private void createUser() {
-    final User user = getUserInputs(1);
+    final User user = getUserInputs();
     userController.create(user);
     LOGGER.debug("\nUser was added to the table.\n");
     showMenu.displayMenu();
@@ -160,7 +158,7 @@ public final class View {
   private void updateUser() {
     LOGGER.debug("\nEnter id to update: ");
     final Integer id = SCANNER.nextInt();
-    final User user = getUserInputs(0);
+    final User user = getUserInputs();
     user.setId(id);
     userController.update(user.getId(), user);
     LOGGER.debug("Updated user, id = " + id);
@@ -178,6 +176,7 @@ public final class View {
 
   private void getAllHubs() {
     hubController.findAll();
+    showMenu.displayMenu();
   }
 
   private void getHubById() {

@@ -2,20 +2,21 @@ package com.mkruchok.view;
 
 import com.mkruchok.controller.implementation.DeviceController;
 import com.mkruchok.controller.implementation.DevicesGroupController;
-import com.mkruchok.controller.implementation.UsersGroupController;
 import com.mkruchok.controller.implementation.HubController;
 import com.mkruchok.controller.implementation.NotificationController;
 import com.mkruchok.controller.implementation.PermissionController;
 import com.mkruchok.controller.implementation.RexController;
 import com.mkruchok.controller.implementation.UserController;
+import com.mkruchok.controller.implementation.UsersGroupController;
 import com.mkruchok.model.entity.Device;
 import com.mkruchok.model.entity.DevicesGroup;
-import com.mkruchok.model.entity.UsersGroup;
 import com.mkruchok.model.entity.Hub;
 import com.mkruchok.model.entity.Notification;
 import com.mkruchok.model.entity.Permission;
 import com.mkruchok.model.entity.Rex;
 import com.mkruchok.model.entity.User;
+import com.mkruchok.model.entity.UsersGroup;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.LinkedHashMap;
@@ -28,7 +29,7 @@ import org.slf4j.LoggerFactory;
 
 public final class View {
   static final Logger LOGGER = LoggerFactory.getLogger(View.class);
-  private static final Scanner SCANNER = new Scanner(System.in, "UTF-8");
+  private static final Scanner SCANNER = new Scanner(System.in, StandardCharsets.UTF_8);
   private final Map<String, Printable> menu = new LinkedHashMap<>();
   private final HubController hubController = new HubController();
   private final DeviceController deviceController = new DeviceController();
@@ -252,8 +253,14 @@ public final class View {
     final Integer hubId = SCANNER.nextInt();
     LOGGER.debug("Enter devices_group_id: ");
     final Integer devicesGroupId = SCANNER.nextInt();
-    return new Device(null, model, status, serviceLifeEndTime, warrantyEndTime, onBattery,
-        hubId, devicesGroupId);
+    return new Device(null,
+        model,
+        status,
+        serviceLifeEndTime,
+        warrantyEndTime,
+        onBattery,
+        hubId,
+        devicesGroupId);
   }
 
   private void createDevice() throws SQLException {

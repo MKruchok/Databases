@@ -17,8 +17,7 @@ public final class DevicesGroupDao implements AbstractDao<DevicesGroup> {
   private static final String GET_ALL = "SELECT * FROM ajax_curr.devices_group";
   private static final String GET_BY_ID = "SELECT * FROM ajax_curr.devices_group WHERE id=?";
   private static final String CREATE =
-      "INSERT ajax_curr.devices_group " + "(`group_name`)"
-          + " VALUES (?)";
+      "INSERT ajax_curr.devices_group " + "(`group_name`)" + " VALUES (?)";
   private static final String UPDATE =
       "UPDATE ajax_curr.devices_group" + " SET group_name=? WHERE id=?";
   private static final String DELETE = "DELETE FROM ajax_curr.users_group WHERE id=?";
@@ -26,56 +25,69 @@ public final class DevicesGroupDao implements AbstractDao<DevicesGroup> {
   @Override
   public List<DevicesGroup> findAll() throws SQLException {
     List<DevicesGroup> devicesGroups = new ArrayList<>();
-    PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(GET_ALL);
-    LOGGER.info(String.valueOf(statement));
-    ResultSet resultSet = statement.executeQuery();
-    while (resultSet.next()) {
-      DevicesGroup devicesGroup = new DevicesGroup(resultSet.getInt("id"),
-          resultSet.getString("group_name"));
-      devicesGroups.add(devicesGroup);
+    try (
+        PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(GET_ALL)) {
+      LOGGER.info(String.valueOf(statement));
+      ResultSet resultSet = statement.executeQuery();
+      while (resultSet.next()) {
+        DevicesGroup devicesGroup =
+            new DevicesGroup(resultSet.getInt("id"), resultSet.getString("group_name"));
+        devicesGroups.add(devicesGroup);
+      }
+    } catch (SQLException e) {
+      LOGGER.error(e.toString());
     }
-    resultSet.close();
     return devicesGroups;
   }
 
   @Override
   public DevicesGroup findById(Integer id) throws SQLException {
     DevicesGroup group = null;
-    PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(GET_BY_ID);
-    statement.setInt(1, id);
-    LOGGER.info(String.valueOf(statement));
-    ResultSet resultSet = statement.executeQuery();
-    while (resultSet.next()) {
-      group = new DevicesGroup(resultSet.getInt("id"),
-          resultSet.getString("group_name"));
+    try (PreparedStatement statement = ConnectionManager.getConnection()
+        .prepareStatement(GET_BY_ID)) {
+      statement.setInt(1, id);
+      LOGGER.info(String.valueOf(statement));
+      ResultSet resultSet = statement.executeQuery();
+      while (resultSet.next()) {
+        group = new DevicesGroup(resultSet.getInt("id"), resultSet.getString("group_name"));
+      }
+    } catch (SQLException e) {
+      LOGGER.error(e.toString());
     }
-    resultSet.close();
     return group;
   }
 
   @Override
   public void create(DevicesGroup group) throws SQLException {
-    PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(CREATE);
-    statement.setString(1, group.getGroupName());
-    statement.executeUpdate();
-    LOGGER.info(String.valueOf(statement));
-
+    try (PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(CREATE)) {
+      statement.setString(1, group.getGroupName());
+      statement.executeUpdate();
+      LOGGER.info(String.valueOf(statement));
+    } catch (SQLException e) {
+      LOGGER.error(e.toString());
+    }
   }
 
   @Override
   public void update(Integer id, DevicesGroup group) throws SQLException {
-    PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(UPDATE);
-    statement.setString(1, group.getGroupName());
-    statement.setInt(2, group.getId());
-    statement.executeUpdate();
-    LOGGER.info(String.valueOf(statement));
+    try (PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(UPDATE)) {
+      statement.setString(1, group.getGroupName());
+      statement.setInt(2, group.getId());
+      statement.executeUpdate();
+      LOGGER.info(String.valueOf(statement));
+    } catch (SQLException e) {
+      LOGGER.error(e.toString());
+    }
   }
 
   @Override
   public void delete(Integer id) throws SQLException {
-    PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(DELETE);
-    statement.setInt(1, id);
-    LOGGER.info(String.valueOf(statement));
-    statement.executeUpdate();
+    try (PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(DELETE)) {
+      statement.setInt(1, id);
+      LOGGER.info(String.valueOf(statement));
+      statement.executeUpdate();
+    } catch (SQLException e) {
+      LOGGER.error(e.toString());
+    }
   }
 }

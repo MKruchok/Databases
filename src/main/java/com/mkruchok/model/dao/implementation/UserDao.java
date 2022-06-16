@@ -26,72 +26,92 @@ public final class UserDao implements AbstractDao<User> {
   @Override
   public List<User> findAll() throws SQLException {
     List<User> users = new ArrayList<>();
-    PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(GET_ALL);
-    LOGGER.info(String.valueOf(statement));
-    ResultSet resultSet = statement.executeQuery();
-    while (resultSet.next()) {
-      User user = new User(resultSet.getInt("id"),
-          resultSet.getString("email"),
-          resultSet.getString("user_password"),
-          resultSet.getTimestamp("date_created"),
-          resultSet.getString("user_name"),
-          resultSet.getString("users_group_id"));
-      users.add(user);
+    try (PreparedStatement statement = ConnectionManager.getConnection()
+        .prepareStatement(GET_ALL)) {
+      LOGGER.info(String.valueOf(statement));
+      ResultSet resultSet = statement.executeQuery();
+      while (resultSet.next()) {
+        User user = new User(resultSet.getInt("id"),
+            resultSet.getString("email"),
+            resultSet.getString("user_password"),
+            resultSet.getTimestamp("date_created"),
+            resultSet.getString("user_name"),
+            resultSet.getString("users_group_id"));
+        users.add(user);
+      }
+    } catch (SQLException e) {
+      LOGGER.error(e.toString());
     }
-    resultSet.close();
+
     return users;
   }
 
   @Override
   public User findById(Integer id) throws SQLException {
     User user = null;
-    PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(GET_BY_ID);
-    statement.setInt(1, id);
-    LOGGER.info(String.valueOf(statement));
-    ResultSet resultSet = statement.executeQuery();
-    while (resultSet.next()) {
-      user = new User(resultSet.getInt("id"),
-          resultSet.getString("email"),
-          resultSet.getString("user_password"),
-          resultSet.getTimestamp("date_created"),
-          resultSet.getString("user_name"),
-          resultSet.getString("users_group_id"));
+    try (PreparedStatement statement = ConnectionManager.getConnection()
+        .prepareStatement(GET_BY_ID)) {
+      statement.setInt(1, id);
+      LOGGER.info(String.valueOf(statement));
+      ResultSet resultSet = statement.executeQuery();
+      while (resultSet.next()) {
+        user = new User(resultSet.getInt("id"),
+            resultSet.getString("email"),
+            resultSet.getString("user_password"),
+            resultSet.getTimestamp("date_created"),
+            resultSet.getString("user_name"),
+            resultSet.getString("users_group_id"));
+      }
+    } catch (SQLException e) {
+      LOGGER.error(e.toString());
     }
-    resultSet.close();
+
     return user;
   }
 
   @Override
   public void create(User user) throws SQLException {
-    PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(CREATE);
-    statement.setString(1, user.getEmail());
-    statement.setString(2, user.getUserPassword());
-    statement.setTimestamp(3, user.getDateCreated());
-    statement.setString(4, user.getUserName());
-    statement.setString(5, user.getUsersGroupId());
-    statement.executeUpdate();
-    LOGGER.info(String.valueOf(statement));
+    try (
+        PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(CREATE)) {
+      statement.setString(1, user.getEmail());
+      statement.setString(2, user.getUserPassword());
+      statement.setTimestamp(3, user.getDateCreated());
+      statement.setString(4, user.getUserName());
+      statement.setString(5, user.getUsersGroupId());
+      statement.executeUpdate();
+      LOGGER.info(String.valueOf(statement));
+    } catch (SQLException e) {
+      LOGGER.error(e.toString());
+    }
 
   }
 
   @Override
   public void update(Integer id, User user) throws SQLException {
-    PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(UPDATE);
-    statement.setString(1, user.getEmail());
-    statement.setTimestamp(3, user.getDateCreated());
-    statement.setString(2, user.getUserPassword());
-    statement.setString(4, user.getUserName());
-    statement.setString(5, user.getUsersGroupId());
-    statement.setInt(6, user.getId());
-    statement.executeUpdate();
-    LOGGER.info(String.valueOf(statement));
+    try (
+        PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(UPDATE)) {
+      statement.setString(1, user.getEmail());
+      statement.setTimestamp(3, user.getDateCreated());
+      statement.setString(2, user.getUserPassword());
+      statement.setString(4, user.getUserName());
+      statement.setString(5, user.getUsersGroupId());
+      statement.setInt(6, user.getId());
+      statement.executeUpdate();
+      LOGGER.info(String.valueOf(statement));
+    } catch (SQLException e) {
+      LOGGER.error(e.toString());
+    }
   }
 
   @Override
   public void delete(Integer id) throws SQLException {
-    PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(DELETE);
-    LOGGER.info(String.valueOf(statement));
-    statement.setInt(1, id);
-    statement.executeUpdate();
+    try (
+        PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(DELETE)) {
+      LOGGER.info(String.valueOf(statement));
+      statement.setInt(1, id);
+      statement.executeUpdate();
+    } catch (SQLException e) {
+      LOGGER.error(e.toString());
+    }
   }
 }

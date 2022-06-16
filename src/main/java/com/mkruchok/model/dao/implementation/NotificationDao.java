@@ -26,68 +26,85 @@ public final class NotificationDao implements AbstractDao<Notification> {
   @Override
   public List<Notification> findAll() throws SQLException {
     List<Notification> notifications = new ArrayList<>();
-    PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(GET_ALL);
-    LOGGER.info(String.valueOf(statement));
-    ResultSet resultSet = statement.executeQuery();
-    while (resultSet.next()) {
-      Notification notification = new Notification(resultSet.getInt("id"),
-          resultSet.getTimestamp("timestamp"),
-          resultSet.getString("notification_type"),
-          resultSet.getInt("device_id"),
-          resultSet.getInt("hub_id"));
-      notifications.add(notification);
+    try (PreparedStatement statement = ConnectionManager.getConnection()
+        .prepareStatement(GET_ALL)) {
+      LOGGER.info(String.valueOf(statement));
+      ResultSet resultSet = statement.executeQuery();
+      while (resultSet.next()) {
+        Notification notification = new Notification(resultSet.getInt("id"),
+            resultSet.getTimestamp("timestamp"),
+            resultSet.getString("notification_type"),
+            resultSet.getInt("device_id"),
+            resultSet.getInt("hub_id"));
+        notifications.add(notification);
+      }
+    } catch (SQLException e) {
+      LOGGER.error(e.toString());
     }
-    resultSet.close();
     return notifications;
   }
 
   @Override
   public Notification findById(Integer id) throws SQLException {
     Notification notification = null;
-    PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(GET_BY_ID);
-    statement.setInt(1, id);
-    LOGGER.info(String.valueOf(statement));
-    ResultSet resultSet = statement.executeQuery();
-    while (resultSet.next()) {
-      notification = new Notification(resultSet.getInt("id"),
-          resultSet.getTimestamp("timestamp"),
-          resultSet.getString("notification_type"),
-          resultSet.getInt("device_id"),
-          resultSet.getInt("hub_id"));
+    try (PreparedStatement statement = ConnectionManager.getConnection()
+        .prepareStatement(GET_BY_ID)) {
+      statement.setInt(1, id);
+      LOGGER.info(String.valueOf(statement));
+      ResultSet resultSet = statement.executeQuery();
+      while (resultSet.next()) {
+        notification = new Notification(resultSet.getInt("id"),
+            resultSet.getTimestamp("timestamp"),
+            resultSet.getString("notification_type"),
+            resultSet.getInt("device_id"),
+            resultSet.getInt("hub_id"));
+      }
+    } catch (SQLException e) {
+      LOGGER.error(e.toString());
     }
-    resultSet.close();
     return notification;
   }
 
   @Override
   public void create(Notification notification) throws SQLException {
-    PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(CREATE);
-    statement.setTimestamp(1, notification.getTimestamp());
-    statement.setString(2, notification.getNotificationType());
-    statement.setInt(3, notification.getDeviceId());
-    statement.setInt(4, notification.getHubId());
-    statement.executeUpdate();
-    LOGGER.info(String.valueOf(statement));
-
+    try (
+        PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(CREATE)) {
+      statement.setTimestamp(1, notification.getTimestamp());
+      statement.setString(2, notification.getNotificationType());
+      statement.setInt(3, notification.getDeviceId());
+      statement.setInt(4, notification.getHubId());
+      statement.executeUpdate();
+      LOGGER.info(String.valueOf(statement));
+    } catch (SQLException e) {
+      LOGGER.error(e.toString());
+    }
   }
 
   @Override
   public void update(Integer id, Notification notification) throws SQLException {
-    PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(UPDATE);
-    statement.setTimestamp(1, notification.getTimestamp());
-    statement.setString(2, notification.getNotificationType());
-    statement.setInt(3, notification.getDeviceId());
-    statement.setInt(4, notification.getHubId());
-    statement.setInt(5, notification.getId());
-    statement.executeUpdate();
-    LOGGER.info(String.valueOf(statement));
+    try (
+        PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(UPDATE)) {
+      statement.setTimestamp(1, notification.getTimestamp());
+      statement.setString(2, notification.getNotificationType());
+      statement.setInt(3, notification.getDeviceId());
+      statement.setInt(4, notification.getHubId());
+      statement.setInt(5, notification.getId());
+      statement.executeUpdate();
+      LOGGER.info(String.valueOf(statement));
+    } catch (SQLException e) {
+      LOGGER.error(e.toString());
+    }
   }
 
   @Override
   public void delete(Integer id) throws SQLException {
-    PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(DELETE);
-    statement.setInt(1, id);
-    LOGGER.info(String.valueOf(statement));
-    statement.executeUpdate();
+    try (
+        PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(DELETE)) {
+      statement.setInt(1, id);
+      LOGGER.info(String.valueOf(statement));
+      statement.executeUpdate();
+    } catch (SQLException e) {
+      LOGGER.error(e.toString());
+    }
   }
 }

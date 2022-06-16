@@ -27,23 +27,26 @@ public final class HubDao implements AbstractDao<Hub> {
   @Override
   public List<Hub> findAll() throws SQLException {
     List<Hub> hubs = new ArrayList<>();
-    PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(GET_ALL);
-    LOGGER.info(String.valueOf(statement));
-    ResultSet resultSet = statement.executeQuery();
-    while (resultSet.next()) {
-      Hub hub = new Hub(resultSet.getInt("id"),
-          resultSet.getString("model"),
-          resultSet.getString("hub_status"),
-          resultSet.getTimestamp("service_life_end_time"),
-          resultSet.getTimestamp("warranty_end_time"),
-          resultSet.getInt("users_max"),
-          resultSet.getInt("rooms_max"),
-          resultSet.getInt("devices_max"),
-          resultSet.getInt("sirens_max"),
-          resultSet.getInt("on_battery"));
-      hubs.add(hub);
+    try (
+        PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(GET_ALL)) {
+      LOGGER.info(String.valueOf(statement));
+      ResultSet resultSet = statement.executeQuery();
+      while (resultSet.next()) {
+        Hub hub = new Hub(resultSet.getInt("id"),
+            resultSet.getString("model"),
+            resultSet.getString("hub_status"),
+            resultSet.getTimestamp("service_life_end_time"),
+            resultSet.getTimestamp("warranty_end_time"),
+            resultSet.getInt("users_max"),
+            resultSet.getInt("rooms_max"),
+            resultSet.getInt("devices_max"),
+            resultSet.getInt("sirens_max"),
+            resultSet.getInt("on_battery"));
+        hubs.add(hub);
+      }
+    } catch (SQLException e) {
+      LOGGER.error(e.toString());
     }
-    resultSet.close();
     return hubs;
 
   }
@@ -51,65 +54,76 @@ public final class HubDao implements AbstractDao<Hub> {
   @Override
   public Hub findById(Integer id) throws SQLException {
     Hub hub = null;
-    PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(GET_BY_ID);
-    statement.setInt(1, id);
-    LOGGER.info(String.valueOf(statement));
-    ResultSet resultSet = statement.executeQuery();
-    while (resultSet.next()) {
-      hub = new Hub(resultSet.getInt("id"),
-          resultSet.getString("model"),
-          resultSet.getString("hub_status"),
-          resultSet.getTimestamp("service_life_end_time"),
-          resultSet.getTimestamp("warranty_end_time"),
-          resultSet.getInt("users_max"),
-          resultSet.getInt("rooms_max"),
-          resultSet.getInt("devices_max"),
-          resultSet.getInt("sirens_max"),
-          resultSet.getInt("on_battery"));
+    try (PreparedStatement statement = ConnectionManager.getConnection()
+        .prepareStatement(GET_BY_ID)) {
+      statement.setInt(1, id);
+      LOGGER.info(String.valueOf(statement));
+      ResultSet resultSet = statement.executeQuery();
+      while (resultSet.next()) {
+        hub = new Hub(resultSet.getInt("id"),
+            resultSet.getString("model"),
+            resultSet.getString("hub_status"),
+            resultSet.getTimestamp("service_life_end_time"),
+            resultSet.getTimestamp("warranty_end_time"),
+            resultSet.getInt("users_max"),
+            resultSet.getInt("rooms_max"),
+            resultSet.getInt("devices_max"),
+            resultSet.getInt("sirens_max"),
+            resultSet.getInt("on_battery"));
+      }
+    } catch (SQLException e) {
+      LOGGER.error(e.toString());
     }
-    resultSet.close();
     return hub;
   }
 
   @Override
   public void create(Hub hub) throws SQLException {
-    PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(CREATE);
-    statement.setString(1, hub.getModel());
-    statement.setString(2, hub.getHubStatus());
-    statement.setTimestamp(3, hub.getServiceLifeEndTime());
-    statement.setTimestamp(4, hub.getWarrantyEndTime());
-    statement.setInt(6, hub.getRoomsMax());
-    statement.setInt(5, hub.getUsersMax());
-    statement.setInt(7, hub.getDevicesMax());
-    statement.setInt(8, hub.getSirensMax());
-    statement.setInt(9, hub.getOnBattery());
-    statement.executeUpdate();
-    LOGGER.info(String.valueOf(statement));
-
+    try (PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(CREATE)) {
+      statement.setString(1, hub.getModel());
+      statement.setString(2, hub.getHubStatus());
+      statement.setTimestamp(3, hub.getServiceLifeEndTime());
+      statement.setTimestamp(4, hub.getWarrantyEndTime());
+      statement.setInt(6, hub.getRoomsMax());
+      statement.setInt(5, hub.getUsersMax());
+      statement.setInt(7, hub.getDevicesMax());
+      statement.setInt(8, hub.getSirensMax());
+      statement.setInt(9, hub.getOnBattery());
+      statement.executeUpdate();
+      LOGGER.info(String.valueOf(statement));
+    } catch (SQLException e) {
+      LOGGER.error(e.toString());
+    }
   }
 
   @Override
   public void update(Integer id, Hub hub) throws SQLException {
-    PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(UPDATE);
-    statement.setString(1, hub.getModel());
-    statement.setString(2, hub.getHubStatus());
-    statement.setTimestamp(3, hub.getServiceLifeEndTime());
-    statement.setTimestamp(4, hub.getWarrantyEndTime());
-    statement.setInt(5, hub.getUsersMax());
-    statement.setInt(6, hub.getRoomsMax());
-    statement.setInt(7, hub.getDevicesMax());
-    statement.setInt(8, hub.getSirensMax());
-    statement.setInt(9, hub.getOnBattery());
-    statement.setInt(10, hub.getId());
-    statement.executeUpdate();
-    LOGGER.info(String.valueOf(statement));
+    try (PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(UPDATE)) {
+      statement.setString(1, hub.getModel());
+      statement.setString(2, hub.getHubStatus());
+      statement.setTimestamp(3, hub.getServiceLifeEndTime());
+      statement.setTimestamp(4, hub.getWarrantyEndTime());
+      statement.setInt(5, hub.getUsersMax());
+      statement.setInt(6, hub.getRoomsMax());
+      statement.setInt(7, hub.getDevicesMax());
+      statement.setInt(8, hub.getSirensMax());
+      statement.setInt(9, hub.getOnBattery());
+      statement.setInt(10, hub.getId());
+      statement.executeUpdate();
+      LOGGER.info(String.valueOf(statement));
+    } catch (SQLException e) {
+      LOGGER.error(e.toString());
+    }
   }
 
   @Override
   public void delete(Integer id) throws SQLException {
-    PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(DELETE);
-    statement.setInt(1, id);
-    LOGGER.info(String.valueOf(statement));
-    statement.executeUpdate();
+    try (PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(DELETE)) {
+      statement.setInt(1, id);
+      LOGGER.info(String.valueOf(statement));
+      statement.executeUpdate();
+    } catch (SQLException e) {
+      LOGGER.error(e.toString());
+    }
   }
 }

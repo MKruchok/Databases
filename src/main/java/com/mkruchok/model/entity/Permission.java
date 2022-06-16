@@ -16,11 +16,10 @@ import lombok.ToString;
 public final class Permission {
   private Integer id;
   private String permissionName;
-  private Integer hub_id;
-  private Integer user_id;
-  private Integer group_id;
-  private Integer device_id;
-
+  private Integer hubId;
+  private Integer userId;
+  private Integer groupId;
+  private Integer deviceId;
 
 
 }

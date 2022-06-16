@@ -28,79 +28,94 @@ public final class DeviceDao implements AbstractDao<Device> {
   @Override
   public List<Device> findAll() throws SQLException {
     List<Device> devices = new ArrayList<>();
-    PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(GET_ALL);
-    LOGGER.info(String.valueOf(statement));
-    ResultSet resultSet = statement.executeQuery();
-    while (resultSet.next()) {
-      Device device = new Device(resultSet.getInt("id"),
-          resultSet.getString("model"),
-          resultSet.getString("device_status"),
-          resultSet.getTimestamp("service_life_end_time"),
-          resultSet.getTimestamp("warranty_end_time"),
-          resultSet.getInt("on_battery"),
-          resultSet.getInt("hub_id"),
-          resultSet.getInt("devices_group_id"));
-      devices.add(device);
+    try (
+        PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(GET_ALL)) {
+      LOGGER.info(String.valueOf(statement));
+      ResultSet resultSet = statement.executeQuery();
+      while (resultSet.next()) {
+        Device device = new Device(resultSet.getInt("id"),
+            resultSet.getString("model"),
+            resultSet.getString("device_status"),
+            resultSet.getTimestamp("service_life_end_time"),
+            resultSet.getTimestamp("warranty_end_time"),
+            resultSet.getInt("on_battery"),
+            resultSet.getInt("hub_id"),
+            resultSet.getInt("devices_group_id"));
+        devices.add(device);
+      }
+    } catch (SQLException e) {
+      LOGGER.error(e.toString());
     }
-    resultSet.close();
     return devices;
   }
 
   @Override
   public Device findById(Integer id) throws SQLException {
     Device device = null;
-    PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(GET_BY_ID);
-    statement.setInt(1, id);
-    LOGGER.info(String.valueOf(statement));
-    ResultSet resultSet = statement.executeQuery();
-    while (resultSet.next()) {
-      device = new Device(resultSet.getInt("id"),
-          resultSet.getString("model"),
-          resultSet.getString("device_status"),
-          resultSet.getTimestamp("service_life_end_time"),
-          resultSet.getTimestamp("warranty_end_time"),
-          resultSet.getInt("on_battery"),
-          resultSet.getInt("hub_id"),
-          resultSet.getInt("devices_group_id"));
+    try (PreparedStatement statement = ConnectionManager.getConnection()
+        .prepareStatement(GET_BY_ID)) {
+      statement.setInt(1, id);
+      LOGGER.info(String.valueOf(statement));
+      ResultSet resultSet = statement.executeQuery();
+      while (resultSet.next()) {
+        device = new Device(resultSet.getInt("id"),
+            resultSet.getString("model"),
+            resultSet.getString("device_status"),
+            resultSet.getTimestamp("service_life_end_time"),
+            resultSet.getTimestamp("warranty_end_time"),
+            resultSet.getInt("on_battery"),
+            resultSet.getInt("hub_id"),
+            resultSet.getInt("devices_group_id"));
+      }
+    } catch (SQLException e) {
+      LOGGER.error(e.toString());
     }
-    resultSet.close();
     return device;
   }
 
   @Override
   public void create(Device device) throws SQLException {
-    PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(CREATE);
-    statement.setString(1, device.getModel());
-    statement.setString(2, device.getDeviceStatus());
-    statement.setTimestamp(3, device.getServiceLifeEndTime());
-    statement.setTimestamp(4, device.getWarrantyEndTime());
-    statement.setInt(5, device.getOnBattery());
-    statement.setInt(6, device.getHubId());
-    statement.setInt(6, device.getDevicesGroupId());
-    statement.executeUpdate();
-    LOGGER.info(String.valueOf(statement));
+    try (PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(CREATE)) {
+      statement.setString(1, device.getModel());
+      statement.setString(2, device.getDeviceStatus());
+      statement.setTimestamp(3, device.getServiceLifeEndTime());
+      statement.setTimestamp(4, device.getWarrantyEndTime());
+      statement.setInt(5, device.getOnBattery());
+      statement.setInt(6, device.getHubId());
+      statement.setInt(6, device.getDevicesGroupId());
+      statement.executeUpdate();
+      LOGGER.info(String.valueOf(statement));
+    } catch (SQLException e) {
+      LOGGER.error(e.toString());
+    }
   }
 
   @Override
   public void update(Integer id, Device device) throws SQLException {
-    PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(UPDATE);
-    statement.setString(2, device.getDeviceStatus());
-    statement.setString(1, device.getModel());
-    statement.setTimestamp(3, device.getServiceLifeEndTime());
-    statement.setTimestamp(4, device.getWarrantyEndTime());
-    statement.setInt(5, device.getOnBattery());
-    statement.setInt(6, device.getHubId());
-    statement.setInt(6, device.getDevicesGroupId());
-    statement.setInt(8, device.getId());
-    LOGGER.info(String.valueOf(statement));
-    statement.executeUpdate();
+    try (PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(UPDATE)) {
+      statement.setString(2, device.getDeviceStatus());
+      statement.setString(1, device.getModel());
+      statement.setTimestamp(3, device.getServiceLifeEndTime());
+      statement.setTimestamp(4, device.getWarrantyEndTime());
+      statement.setInt(5, device.getOnBattery());
+      statement.setInt(6, device.getHubId());
+      statement.setInt(6, device.getDevicesGroupId());
+      statement.setInt(8, device.getId());
+      LOGGER.info(String.valueOf(statement));
+      statement.executeUpdate();
+    } catch (SQLException e) {
+      LOGGER.error(e.toString());
+    }
   }
 
   @Override
   public void delete(Integer id) throws SQLException {
-    PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(DELETE);
-    statement.setInt(1, id);
-    LOGGER.info(String.valueOf(statement));
-    statement.executeUpdate();
+    try (PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(DELETE)) {
+      statement.setInt(1, id);
+      LOGGER.info(String.valueOf(statement));
+      statement.executeUpdate();
+    } catch (SQLException e) {
+      LOGGER.error(e.toString());
+    }
   }
 }

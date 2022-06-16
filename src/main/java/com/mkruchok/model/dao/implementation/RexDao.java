@@ -25,64 +25,82 @@ public final class RexDao implements AbstractDao<Rex> {
   @Override
   public List<Rex> findAll() throws SQLException {
     List<Rex> rexes = new ArrayList<>();
-    PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(GET_ALL);
-    LOGGER.info(String.valueOf(statement));
-    ResultSet resultSet = statement.executeQuery();
-    while (resultSet.next()) {
-      Rex rex = new Rex(resultSet.getInt("id"),
-          resultSet.getString("rex_name"),
-          resultSet.getString("rex_range"),
-          resultSet.getInt("hub_id"));
-      rexes.add(rex);
+    try (PreparedStatement statement = ConnectionManager.getConnection()
+        .prepareStatement(GET_ALL)) {
+      LOGGER.info(String.valueOf(statement));
+      ResultSet resultSet = statement.executeQuery();
+      while (resultSet.next()) {
+        Rex rex = new Rex(resultSet.getInt("id"),
+            resultSet.getString("rex_name"),
+            resultSet.getString("rex_range"),
+            resultSet.getInt("hub_id"));
+        rexes.add(rex);
+      }
+    } catch (SQLException e) {
+      LOGGER.error(e.toString());
     }
-    resultSet.close();
+
     return rexes;
   }
 
   @Override
   public Rex findById(Integer id) throws SQLException {
     Rex rex = null;
-    PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(GET_BY_ID);
-    statement.setInt(1, id);
-    LOGGER.info(String.valueOf(statement));
-    ResultSet resultSet = statement.executeQuery();
-    while (resultSet.next()) {
-      rex = new Rex(resultSet.getInt("id"),
-          resultSet.getString("rex_name"),
-          resultSet.getString("rex_range"),
-          resultSet.getInt("hub_id"));
+    try (PreparedStatement statement = ConnectionManager.getConnection()
+        .prepareStatement(GET_BY_ID)) {
+      statement.setInt(1, id);
+      LOGGER.info(String.valueOf(statement));
+      ResultSet resultSet = statement.executeQuery();
+      while (resultSet.next()) {
+        rex = new Rex(resultSet.getInt("id"),
+            resultSet.getString("rex_name"),
+            resultSet.getString("rex_range"),
+            resultSet.getInt("hub_id"));
+      }
+    } catch (SQLException e) {
+      LOGGER.error(e.toString());
     }
-    resultSet.close();
+
     return rex;
   }
 
   @Override
   public void create(Rex rex) throws SQLException {
-    PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(CREATE);
-    statement.setString(1, rex.getRexName());
-    statement.setString(2, rex.getRexRange());
-    statement.setInt(3, rex.getHubId());
-    statement.executeUpdate();
-    LOGGER.info(String.valueOf(statement));
+    try (
+        PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(CREATE)) {
+      statement.setString(1, rex.getRexName());
+      statement.setString(2, rex.getRexRange());
+      statement.setInt(3, rex.getHubId());
+      statement.executeUpdate();
+      LOGGER.info(String.valueOf(statement));
+    } catch (SQLException e) {
+      LOGGER.error(e.toString());
+    }
 
   }
 
   @Override
   public void update(Integer id, Rex rex) throws SQLException {
-    PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(UPDATE);
-    statement.setString(1, rex.getRexName());
-    statement.setString(2, rex.getRexRange());
-    statement.setInt(3, rex.getHubId());
-    statement.setInt(4, rex.getId());
-    statement.executeUpdate();
-    LOGGER.info(String.valueOf(statement));
+    try (
+        PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(UPDATE)) {
+      statement.setString(1, rex.getRexName());
+      statement.setString(2, rex.getRexRange());
+      statement.setInt(3, rex.getHubId());
+      statement.setInt(4, rex.getId());
+      statement.executeUpdate();
+      LOGGER.info(String.valueOf(statement));
+    }
   }
 
   @Override
   public void delete(Integer id) throws SQLException {
-    PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(DELETE);
-    LOGGER.info(String.valueOf(statement));
-    statement.setInt(1, id);
-    statement.executeUpdate();
+    try (
+        PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(DELETE)) {
+      LOGGER.info(String.valueOf(statement));
+      statement.setInt(1, id);
+      statement.executeUpdate();
+    } catch (SQLException e) {
+      LOGGER.error(e.toString());
+    }
   }
 }

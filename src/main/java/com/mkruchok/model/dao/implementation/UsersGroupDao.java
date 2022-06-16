@@ -19,71 +19,91 @@ public final class UsersGroupDao implements AbstractDao<UsersGroup> {
   private static final String CREATE =
       "INSERT ajax_curr.users_group " + "(`group_name`,`group_description`,`hub_id`)"
           + " VALUES (?, ?, ?)";
-  private static final String UPDATE =
-      "UPDATE ajax_curr.users_group" + " SET group_name=?, group_description=?, hub_id=? WHERE id=?";
+  private static final String UPDATE = "UPDATE ajax_curr.users_group"
+      + " SET group_name=?, group_description=?, hub_id=? WHERE id=?";
   private static final String DELETE = "DELETE FROM ajax_curr.users_group WHERE id=?";
 
   @Override
   public List<UsersGroup> findAll() throws SQLException {
     List<UsersGroup> groups = new ArrayList<>();
-    PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(GET_ALL);
-    LOGGER.info(String.valueOf(statement));
-    ResultSet resultSet = statement.executeQuery();
-    while (resultSet.next()) {
-      UsersGroup group = new UsersGroup(resultSet.getInt("id"),
-          resultSet.getString("group_name"),
-          resultSet.getString("group_description"),
-          resultSet.getInt("hub_id"));
-      groups.add(group);
+    try (PreparedStatement statement = ConnectionManager.getConnection()
+        .prepareStatement(GET_ALL)) {
+      LOGGER.info(String.valueOf(statement));
+      ResultSet resultSet = statement.executeQuery();
+      while (resultSet.next()) {
+        UsersGroup group = new UsersGroup(resultSet.getInt("id"),
+            resultSet.getString("group_name"),
+            resultSet.getString("group_description"),
+            resultSet.getInt("hub_id"));
+        groups.add(group);
+      }
+    } catch (SQLException e) {
+      LOGGER.error(e.toString());
     }
-    resultSet.close();
+
     return groups;
   }
 
   @Override
   public UsersGroup findById(Integer id) throws SQLException {
     UsersGroup group = null;
-    PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(GET_BY_ID);
-    statement.setInt(1, id);
-    LOGGER.info(String.valueOf(statement));
-    ResultSet resultSet = statement.executeQuery();
-    while (resultSet.next()) {
-      group = new UsersGroup(resultSet.getInt("id"),
-          resultSet.getString("name"),
-          resultSet.getString("description"),
-          resultSet.getInt("hub_id"));
+    try (PreparedStatement statement = ConnectionManager.getConnection()
+        .prepareStatement(GET_BY_ID)) {
+      statement.setInt(1, id);
+      LOGGER.info(String.valueOf(statement));
+      ResultSet resultSet = statement.executeQuery();
+      while (resultSet.next()) {
+        group = new UsersGroup(resultSet.getInt("id"),
+            resultSet.getString("name"),
+            resultSet.getString("description"),
+            resultSet.getInt("hub_id"));
+      }
+    } catch (SQLException e) {
+      LOGGER.error(e.toString());
     }
-    resultSet.close();
+
     return group;
   }
 
   @Override
   public void create(UsersGroup group) throws SQLException {
-    PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(CREATE);
-    statement.setString(1, group.getGroupName());
-    statement.setString(2, group.getGroupDescription());
-    statement.setInt(3, group.getHubId());
-    statement.executeUpdate();
-    LOGGER.info(String.valueOf(statement));
+    try (
+        PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(CREATE)) {
+      statement.setString(1, group.getGroupName());
+      statement.setString(2, group.getGroupDescription());
+      statement.setInt(3, group.getHubId());
+      statement.executeUpdate();
+      LOGGER.info(String.valueOf(statement));
+    } catch (SQLException e) {
+      LOGGER.error(e.toString());
+    }
 
   }
 
   @Override
   public void update(Integer id, UsersGroup group) throws SQLException {
-    PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(UPDATE);
-    statement.setString(1, group.getGroupName());
-    statement.setString(2, group.getGroupDescription());
-    statement.setInt(3, group.getHubId());
-    statement.setInt(4, group.getId());
-    statement.executeUpdate();
-    LOGGER.info(String.valueOf(statement));
+    try (
+        PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(UPDATE)) {
+      statement.setString(1, group.getGroupName());
+      statement.setString(2, group.getGroupDescription());
+      statement.setInt(3, group.getHubId());
+      statement.setInt(4, group.getId());
+      statement.executeUpdate();
+      LOGGER.info(String.valueOf(statement));
+    } catch (SQLException e) {
+      LOGGER.error(e.toString());
+    }
   }
 
   @Override
   public void delete(Integer id) throws SQLException {
-    PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(DELETE);
-    statement.setInt(1, id);
-    LOGGER.info(String.valueOf(statement));
-    statement.executeUpdate();
+    try (
+        PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(DELETE)) {
+      statement.setInt(1, id);
+      LOGGER.info(String.valueOf(statement));
+      statement.executeUpdate();
+    } catch (SQLException e) {
+      LOGGER.error(e.toString());
+    }
   }
 }

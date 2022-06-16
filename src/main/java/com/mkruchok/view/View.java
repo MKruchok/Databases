@@ -124,18 +124,22 @@ public final class View {
     final String password = SCANNER.next();
     LOGGER.debug("Enter name: ");
     final String name = SCANNER.next();
-    Timestamp dateCreated = new Timestamp(System.currentTimeMillis());
-    UsersGroup groupEntity;
+    final Timestamp dateCreated = new Timestamp(System.currentTimeMillis());
+    final UsersGroup groupEntity;
     final Collection<Hub> userHubs = new ArrayList<>();
     final Collection<Permission> userPermissions = new ArrayList<>();
     LOGGER.debug("Enter group id: ");
     final int groupId = SCANNER.nextInt();
     LOGGER.debug("Enter hub id to add or skip (0): ");
     final int hubId = SCANNER.nextInt();
-    if (hubId != 0) userHubs.add(hubController.findById(hubId));
+    if (hubId != 0) {
+      userHubs.add(hubController.findById(hubId));
+    }
     LOGGER.debug("Enter permission id to add or skip(0): ");
     final int permissionId = SCANNER.nextInt();
-    if (permissionId != 0) userPermissions.add(permissionController.findById(permissionId));
+    if (permissionId != 0) {
+      userPermissions.add(permissionController.findById(permissionId));
+    }
     groupEntity = groupId == 0 ? null : usersGroupController.findById(groupId);
 
     return new User(null,

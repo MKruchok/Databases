@@ -16,7 +16,6 @@ import com.mkruchok.model.entity.Permission;
 import com.mkruchok.model.entity.Rex;
 import com.mkruchok.model.entity.User;
 import com.mkruchok.model.entity.UsersGroup;
-import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -475,7 +474,8 @@ public final class View {
 
   private Permission getPermissionInputs() {
     LOGGER.debug("Enter permission_name: ");
-    final String name = SCANNER.next();
+    SCANNER.nextLine();
+    final String name = SCANNER.nextLine();
     LOGGER.debug("Enter hub_id: ");
     int hubIdNull = SCANNER.nextInt();
     final Hub hubId = hubIdNull == 0 ? null : hubController.findById(hubIdNull);

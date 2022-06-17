@@ -11,9 +11,13 @@ CREATE TRIGGER post_update
     ON post
     FOR EACH ROW
 BEGIN
-    IF (new.id != old.id AND old.id IN (SELECT id FROM post)) THEN
+    IF (old.id IN (SELECT post_id FROM employee)) THEN
+    SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'cannot change linked entities';
+    END IF;
+    IF (new.id != old.id) THEN
         SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'no such data found';
+            SET MESSAGE_TEXT = 'id is not same';
     END IF;
 END //
 DELIMITER ;
@@ -33,7 +37,7 @@ END //
 DELIMITER ;
 
 
--- EFFECT ZONE 
+-- EFFECT ZONE
 
 
 DROP TRIGGER IF EXISTS effect_zone_update;
@@ -43,12 +47,17 @@ CREATE TRIGGER effect_zone_update
     ON effect_zone
     FOR EACH ROW
 BEGIN
-    IF (new.id != old.id AND old.id IN (SELECT id FROM effect_zone)) THEN
+    IF (old.id IN (SELECT zone_id FROM medicine_zone)) THEN
+    SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'cannot change linked entities';
+    END IF;
+    IF (new.id != old.id) THEN
         SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'no such data found';
+            SET MESSAGE_TEXT = 'id is not same';
     END IF;
 END //
 DELIMITER ;
+# UPDATE effect_zone SET id = 16,name = 'Jojo' WHERE id = 3;
 
 DROP TRIGGER IF EXISTS effect_zone_delete;
 DELIMITER //
@@ -72,9 +81,13 @@ CREATE TRIGGER street_update
     ON street
     FOR EACH ROW
 BEGIN
-    IF (new.id != old.id AND old.id IN (SELECT id FROM street)) THEN
+    IF (old.id IN (SELECT street_id FROM pharmacy)) THEN
+    SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'cannot change linked entities';
+    END IF;
+    IF (new.id != old.id) THEN
         SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'no such data found';
+            SET MESSAGE_TEXT = 'id is not same';
     END IF;
 END //
 DELIMITER ;
@@ -102,9 +115,14 @@ CREATE TRIGGER medicine_update
     ON medicine_list
     FOR EACH ROW
 BEGIN
-    IF (new.id != old.id AND old.id IN (SELECT id FROM medicine_list)) THEN
+    IF (old.id IN (SELECT medicine_id FROM medicine_zone)
+        OR old.id IN (SELECT medicine_id FROM pharmaсy_has_medicine)) THEN
+    SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'cannot change linked entities';
+    END IF;
+    IF (new.id != old.id) THEN
         SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'no such data found';
+            SET MESSAGE_TEXT = 'id is not same';
     END IF;
 
 
@@ -159,15 +177,15 @@ CREATE TRIGGER employee_update
     ON employee
     FOR EACH ROW
 BEGIN
-    IF (new.id != old.id AND old.id IN (SELECT id FROM employee)) THEN
+    IF (new.id != old.id) THEN
         SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'no such data found';
+            SET MESSAGE_TEXT = 'id is not same';
     END IF;
 END//
 DELIMITER ;
 
 
--- Pharmacy 
+-- Pharmacy
 
 DROP TRIGGER IF EXISTS pharmacy_insert;
 
@@ -192,9 +210,14 @@ CREATE TRIGGER pharmacy_update
     ON pharmacy
     FOR EACH ROW
 BEGIN
-    IF (new.id != old.id AND old.id IN (SELECT id FROM pharmacy)) THEN
+    IF (old.id IN (SELECT pharmacy_id FROM employee)
+            OR old.id IN (SELECT pharmacy_id FROM pharmaсy_has_medicine)) THEN
+    SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'cannot change linked entities';
+    END IF;
+    IF (new.id != old.id) THEN
         SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'no such data found';
+            SET MESSAGE_TEXT = 'id is not same';
     END IF;
 END//
 DELIMITER ;
@@ -240,19 +263,18 @@ CREATE TRIGGER medicine_zone_update
     ON medicine_zone
     FOR EACH ROW
 BEGIN
-    IF (new.medicine_id != old.medicine_id AND
-        old.medicine_id IN (SELECT medicine_id FROM medicine_zone)) THEN
+    IF (new.medicine_id NOT IN (SELECT id FROM medicine_list)) THEN
         SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'no such link in the linking table';
+            SET MESSAGE_TEXT = 'no such medicine_list found';
     END IF;
-    IF (new.zone_id != old.zone_id AND old.zone_id IN (SELECT zone_id FROM medicine_zone)) THEN
+    IF (new.zone_id NOT IN (SELECT id FROM effect_zone)) THEN
         SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'no such link in the linking table';
+            SET MESSAGE_TEXT = 'no such new effect_zone found';
     END IF;
 
 END
 // DELIMITER ;
-
+# UPDATE medicine_zone SET medicine_id = 110, zone_id = 6 WHERE medicine_id = 7 AND zone_id = 2;
 
 -- pharmacy has medicine
 
@@ -281,13 +303,11 @@ CREATE TRIGGER pharmacy_has_medicine_update
     ON pharmaсy_has_medicine
     FOR EACH ROW
 BEGIN
-    IF (new.pharmacy_id != old.pharmacy_id AND
-        old.pharmacy_id IN (SELECT pharmacy_id FROM pharmaсy_has_medicine)) THEN
+    IF (new.pharmacy_id NOT IN (SELECT id FROM pharmacy)) THEN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'no such link in the linking table';
     END IF;
-    IF (new.medicine_id != old.medicine_id AND
-        old.medicine_id IN (SELECT medicine_id FROM pharmaсy_has_medicine)) THEN
+    IF (new.medicine_id NOT IN (SELECT id FROM medicine_list)) THEN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'no such link in the linking table';
     END IF;
@@ -302,7 +322,7 @@ CREATE TRIGGER passport_data_format
     ON employee
     FOR EACH ROW
 BEGIN
-    IF (new.passport_data NOT RLIKE '.. [0-9]{6}') THEN
+    IF (new.passport_data NOT RLIKE '[a-zA-Z]{2} [0-9]{6}') THEN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'passport data does not match provided pattern!';
     END IF;

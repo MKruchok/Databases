@@ -48,22 +48,6 @@ END //
 DELIMITER ;
 
 # call insert_street();
--- 2
-DROP PROCEDURE IF EXISTS insert_medicine_zone;
-DELIMITER //
-CREATE PROCEDURE insert_medicine_zone(
-    medicine_id INT,
-    zone_id INT
-)
-BEGIN
-    IF (SELECT id FROM medicine_list WHERE id = medicine_id)
-        AND (SELECT id FROM effect_zone WHERE id = zone_id)
-    THEN
-        INSERT INTO medicine_zone(medicine_id, zone_id) VALUES (medicine_id, zone_id);
-    END IF;
-END //
-DELIMITER ;
-
 
 -- 3 курсор.
 
@@ -97,46 +81,5 @@ BEGIN
 END //
 DELIMITER ;
 
-# call pharmacy_create_names();
--- 3 курсор
-
-DROP PROCEDURE IF EXISTS employee_create_db;
-DELIMITER //
-CREATE PROCEDURE employee_create_db()
-BEGIN
-    DECLARE done BOOL DEFAULT FALSE;
-    DECLARE new_name VARCHAR(45);
-    DECLARE new_surname VARCHAR(45);
-    DECLARE surnames CURSOR
-        FOR SELECT name, surname FROM employee;
-    DECLARE CONTINUE HANDLER
-        FOR NOT FOUND SET done = TRUE;
-    OPEN surnames;
-    names_loop:
-    LOOP
-        FETCH surnames INTO new_name, new_surname;
-        IF done THEN
-            LEAVE names_loop;
-        END IF;
-
-        SET @employee_db := CONCAT('CREATE DATABASE IF NOT EXISTS ', new_name, new_surname, ';');
-        PREPARE query FROM @employee_db;
-        EXECUTE query;
-        SET @table_count := 1;
-
-        WHILE @table_count < RAND() * 4
-            DO
-                SET @new_table =
-                        CONCAT('CREATE TABLE IF NOT EXISTS ', new_name, new_surname, '.', new_name,
-                               new_surname, @table_count,
-                               '( id INT, name VARCHAR(45), surname VARCHAR(45));');
-                SELECT @new_table;
-                PREPARE new_table_query FROM @new_table;
-                EXECUTE new_table_query;
-                SET @table_count = @table_count + 1;
-            END WHILE;
-
-    END LOOP;
-    CLOSE surnames;
-END //
-DELIMITER ;
+# DROP TABLE IF EXISTS pharmacy_names;
+# CALL pharmacy_create_names();

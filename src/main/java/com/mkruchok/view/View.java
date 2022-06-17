@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 
 public final class View {
   static final Logger LOGGER = LoggerFactory.getLogger(View.class);
-  private static final Scanner SCANNER = new Scanner(System.in, StandardCharsets.UTF_8);
+  private static final Scanner SCANNER = new Scanner(System.in, "UTF-8");
   private final Map<String, Printable> menu = new LinkedHashMap<>();
   private final HubController hubController = new HubController();
   private final DeviceController deviceController = new DeviceController();

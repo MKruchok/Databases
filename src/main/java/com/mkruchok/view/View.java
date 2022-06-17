@@ -16,7 +16,6 @@ import com.mkruchok.model.entity.Permission;
 import com.mkruchok.model.entity.Rex;
 import com.mkruchok.model.entity.User;
 import com.mkruchok.model.entity.UsersGroup;
-import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.LinkedHashMap;

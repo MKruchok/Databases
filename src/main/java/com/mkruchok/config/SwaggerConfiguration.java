@@ -32,7 +32,7 @@ public class SwaggerConfiguration {
   @Bean
   public OpenAPI ajaxOpenApi() {
     Server server = new Server();
-    server.setUrl("http://localhost:8888");
+    server.setUrl("http://localhost:8443");
     return new OpenAPI().info(new Info().title("AJAX SYSTEMS CRUD DEMO")
         .description("Application for ajax security systems")
         .version("v0.0.1")

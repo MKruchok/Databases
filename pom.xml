@@ -10,8 +10,8 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.mkruchok</groupId>
-    <artifactId>DB6MK</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <artifactId>db6mk</artifactId>
+    <version>1.1.0</version>
     <name>DB6MK</name>
     <description>DB6MK</description>
     <scm>

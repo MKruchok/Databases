@@ -10,7 +10,6 @@
 *.html
 *.css
 *.rss
-*.mvn
 
 *target
 

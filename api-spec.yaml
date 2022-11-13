@@ -1,0 +1,90 @@
+swagger: '2.0'
+info:
+  title: AjaxAPI
+  description: Ajax API
+  version: 1.0.0
+schemes:
+  - https
+produces:
+  - application/json
+x-google-backend:
+  address: https://cloud-spring-service-tsbbvhn5la-nw.a.run.app
+  path_translation: APPEND_PATH_TO_ADDRESS
+x-google-management:
+  metrics:
+    - name: "post-sensordata-requests"
+      displayName: "Post Requests"
+      valueType: INT64
+      metricKind: DELTA
+  quota:
+    limits:
+      - name: "post-sensordata-limit"
+        metric: "post-sensordata-requests"
+        unit: "1/min/{project}"
+        values:
+          STANDARD: 3
+paths:
+  /sensor:
+    get:
+      summary: Gets all data
+      operationId: sensor-get
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            type: string
+      security:
+        - api_key: [ ]
+    post:
+      summary: Adds sensors data to the table.
+      operationId: sensor-post
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: sensor
+          description: The data to add.
+          schema:
+            type: object
+            required:
+              - name
+              - value
+              - coordinates
+              - time_created
+            properties:
+              name:
+                type: string
+              value:
+                type: number
+              coordinates:
+                type: string
+              time_created:
+                type: string
+      responses:
+        '201':
+          description: Data added to the table.
+      security:
+        - api_key: [ ]
+      x-google-quota:
+        metricCosts:
+          "post-sensordata-requests": 1
+  /sensor/{id}:
+    delete:
+      summary: Removes data by id
+      operationId: sensor-delete
+      parameters:
+        - name: id
+          in: path
+          description: Sensordata id
+          type: integer
+          required: true
+      responses:
+        '200':
+          description: A successful response
+      security:
+        - api_key: [ ]
+securityDefinitions:
+  api_key:
+    type: "apiKey"
+    name: "key"
+    in: "query"

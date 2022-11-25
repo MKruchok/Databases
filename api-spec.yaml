@@ -22,7 +22,7 @@ x-google-management:
         metric: "post-sensordata-requests"
         unit: "1/min/{project}"
         values:
-          STANDARD: 3
+          STANDARD: 7
 paths:
   /sensor:
     get:
@@ -67,7 +67,7 @@ paths:
         - api_key: [ ]
       x-google-quota:
         metricCosts:
-          "post-sensordata-requests": 1
+          "post-sensordata-requests": 4
   /sensor/{id}:
     delete:
       summary: Removes data by id

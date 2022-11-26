@@ -1,6 +1,7 @@
 package com.mkruchok.entity;
 
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Collection;
 import javax.persistence.CascadeType;
@@ -35,7 +36,7 @@ import org.hibernate.annotations.LazyCollectionOption;
 @Getter
 @Setter
 @Entity
-public class User {
+public class User implements Serializable {
   @Id
   @Column(name = "id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,7 +45,7 @@ public class User {
       length = MagicNumber.L45)
   private String email;
   @Column(name = "user_password",
-      length = MagicNumber.L45)
+      length = MagicNumber.L150)
   private String password;
   @CreationTimestamp
   @Column(name = "date_created")

@@ -1,23 +1,9 @@
-kind: StorageClass
-apiVersion: storage.k8s.io/v1
-metadata:
-  name: regionalpd-storageclass
-provisioner: kubernetes.io/gce-pd
-parameters:
-  type: pd-standard
-  replication-type: regional-pd
-allowedTopologies:
-  - matchLabelExpressions:
-      - key: failure-domain.beta.kubernetes.io/zone
-        values:
-          - us-east5-c
----
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: mysql-pv
 spec:
-  storageClassName: standard
+  storageClassName: standard #storage class provided by GCP
   accessModes:
     - ReadWriteOnce
   resources:
